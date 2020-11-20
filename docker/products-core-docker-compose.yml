@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+    products_database: 
+        image: mysql
+        container_name: products_database
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: products_database
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        ports:
+            - 3306:3306
+        volumes:
+            - products_database_data:/var/lib/mysql
+
+volumes:
+    products_database_data:

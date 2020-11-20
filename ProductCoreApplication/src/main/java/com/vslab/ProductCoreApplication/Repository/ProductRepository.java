@@ -1,10 +1,16 @@
-package com.vslab.UserSrvApplication.Repository;
+package com.vslab.ProductCoreApplication.Repository;
 
-import com.vslab.UserSrvApplication.Model.Product;
-import com.vslab.UserSrvApplication.Model.Role;
+import java.util.List;
+import java.util.Optional;
+
+import com.vslab.ProductCoreApplication.Model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Product findOne(Long productId);
+    Optional<Product> findById(Long id);
+
+    List<Product> findAll();
+
+    Product save(Product product);
 }

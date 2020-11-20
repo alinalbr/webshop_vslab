@@ -1,4 +1,4 @@
-package com.vslab.UserSrvApplication.Model;
+package com.vslab.ProductCoreApplication.Model;
 
 import io.micrometer.core.lang.NonNull;
 
@@ -16,18 +16,20 @@ public class Product {
 
     @NonNull
     private String name;
+
     @NonNull
-    private double price;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Double price;
+
+    @NonNull
+    private Long categoryId;
+
     @NonNull
     private String details;
 
-    public Product(String name, double price, Category category, String details) {
+    public Product(String name, Double price, Long categoryId, String details) {
         this.name = name;
         this.price = price;
-        this.category = category;
+        this.categoryId = categoryId;
         this.details = details;
     }
 
@@ -58,12 +60,12 @@ public class Product {
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getDetails() {
