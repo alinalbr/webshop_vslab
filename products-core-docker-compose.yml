@@ -13,6 +13,17 @@ services:
             - 3306:3306
         volumes:
             - products_database_data:/var/lib/mysql
+    products_core_backend:
+        build: ProductCoreApplication
+        container_name: products_core_backend
+        ports:
+          - "8080:8080"
+        volumes:
+          - ./ProductCoreApplication:/ProductCoreApplication
+        depends_on:
+          - products_core_database
+        links:
+          - products_core_database
 
 volumes:
     products_database_data:

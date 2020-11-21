@@ -36,22 +36,23 @@ public class ProductController {
         List<Product> products = repo.findAll();
 
         if (searchValue != null) {
-            products.stream()
+            products = products.stream()
             .filter((Product product) -> {
-                return product.getName() == searchValue;
+                return product.getName().equals(searchValue);
             })
             .collect(Collectors.toList());
 
         }
+
         if (minPreis != null) {
-            products.stream()
-            .filter((Product product) -> {
-                return product.getPrice() >= minPreis;
-            })
+            products = products.stream()
+                .filter((Product product) -> {
+                    return product.getPrice() >= minPreis;
+                })
             .collect(Collectors.toList());
         }
         if (maxPreis != null) {
-            products.stream()
+            products = products.stream()
             .filter((Product product) -> {
                 return product.getPrice() <= maxPreis;
             })
