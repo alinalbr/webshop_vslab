@@ -2,6 +2,7 @@ package com.vslab.ProductCoreApplication.Controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.vslab.ProductCoreApplication.Model.Product;
 import com.vslab.ProductCoreApplication.Repository.ProductRepository;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,22 +32,30 @@ public class ProductController {
             @RequestParam(value = "minPreis", required = false) Double minPreis,
             @RequestParam(value = "maxPreis", required = false) Double maxPreis
             ) {
-                List<Product> products = repo.findAll();  
+                
+        List<Product> products = repo.findAll();
 
         if (searchValue != null) {
-            products.stream().filter(product -> {
+            products.stream()
+            .filter((Product product) -> {
                 return product.getName() == searchValue;
-            });
+            })
+            .collect(Collectors.toList());
+
         }
         if (minPreis != null) {
-            products.stream().filter(product -> {
+            products.stream()
+            .filter((Product product) -> {
                 return product.getPrice() >= minPreis;
-            });
+            })
+            .collect(Collectors.toList());
         }
         if (maxPreis != null) {
-            products.stream().filter(product -> {
+            products.stream()
+            .filter((Product product) -> {
                 return product.getPrice() <= maxPreis;
-            });
+            })
+            .collect(Collectors.toList());
         }
 
         return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
