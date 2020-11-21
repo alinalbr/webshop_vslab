@@ -1,4 +1,4 @@
-package com.vslab.UserSrvApplication.Model;
+package com.vslab.UserCoreApplication.Model;
 
 import io.micrometer.core.lang.NonNull;
 
@@ -21,6 +21,13 @@ public class Role {
     @NonNull
     private int level;
 
+    public Role(String typ, int level) {
+        this.typ = typ;
+        this.level = level;
+    }
+
+    public Role() {
+    }
 
     public Long getId() {
         return id;

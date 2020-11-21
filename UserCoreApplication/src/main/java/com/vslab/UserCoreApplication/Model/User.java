@@ -1,6 +1,7 @@
-package com.vslab.UserSrvApplication.Model;
+package com.vslab.UserCoreApplication.Model;
 
 import javax.persistence.*;
+import com.vslab.UserCoreApplication.Model.Role;
 
 @Entity
 @Table(name="User")
@@ -10,6 +11,9 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+    //@Id
+    //@Column(name = "username", nullable = false)
+    //private String username;
 
     @Column(name = "firstname", nullable = false)
     private String firstname;
