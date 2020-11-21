@@ -48,41 +48,48 @@ public class ProductController {
             });
         }
 
-        return new ResponseEntity(products, HttpStatus.OK);
+        return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long productId) {
+    public ResponseEntity<Optional<Product>> getProduct(@PathVariable Long productId) {
         Optional<Product> product = repo.findById(productId);
         if (!product.isPresent()) {
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Optional<Product>>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity(product, HttpStatus.OK); // TO DO product aufbereiten
+            return new ResponseEntity<Optional<Product>>(product, HttpStatus.OK); // TO DO product aufbereiten
         }
     }
 
     @PostMapping("")
-    public ResponseEntity addProduct(@RequestBody Product product) {
+    public ResponseEntity<Void> addProduct(@RequestBody Product product) {
         Product createdProduct = repo.save(product);
         if (createdProduct == null) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity(null, HttpStatus.CREATED);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
         }   
     }
 
     @DeleteMapping("/category/{categoryId}")
-    public ResponseEntity deleteProductsMatchingCategory(@PathVariable Long categoryId) {
-        // TO DO delete
-        if (true) {// TO DO if id not found
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> deleteProductsMatchingCategory(@PathVariable Long categoryId) {
+       List<Product> productsMatchingCategory = repo.findByCategoryId(categoryId);
+        if (productsMatchingCategory.size() == 0) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity(null, HttpStatus.OK);
+            repo.deleteByCategoryId(categoryId);
+            return new ResponseEntity<Void>(HttpStatus.OK);
         }
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity deleteProduct(@PathVariable Long productId) {
-        return new ResponseEntity(null, HttpStatus.OK); 
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        Optional<Product> product = repo.findById(productId);
+        if (!product.isPresent()) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        } else {
+            repo.deleteById(productId);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
     }
 }

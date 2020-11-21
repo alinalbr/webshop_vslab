@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-    products_database: 
+    products_core_database: 
         image: mysql
-        container_name: products_database
+        container_name: products_core_database
         environment:
             MYSQL_ROOT_PASSWORD: password
-            MYSQL_DATABASE: products_database
+            MYSQL_DATABASE: products_core_database
             MYSQL_USER: user
             MYSQL_PASSWORD: password
         ports:
