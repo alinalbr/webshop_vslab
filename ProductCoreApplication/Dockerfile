@@ -1,4 +1,4 @@
-FROM maven:3.6.3-jdk-11
+FROM maven:3.6.3-openjdk-11
 RUN mkdir -p /ProductCoreApplication
 WORKDIR /ProductCoreApplication
 COPY . /ProductCoreApplication/

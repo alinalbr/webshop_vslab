@@ -68,7 +68,7 @@ public class ProductController {
         if (!product.isPresent()) {
             return new ResponseEntity<Optional<Product>>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<Optional<Product>>(product, HttpStatus.OK); // TO DO product aufbereiten
+            return new ResponseEntity<Optional<Product>>(product, HttpStatus.OK);
         }
     }
 
@@ -100,7 +100,7 @@ public class ProductController {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         } else {
             repo.deleteById(productId);
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            return this.getProduct(productId);
         }
     }
 }
