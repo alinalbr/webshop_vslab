@@ -37,7 +37,7 @@ public class UserController {
     }
 
 
-    //Login User
+    //Login User with Pathvariables
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public ResponseEntity<Boolean> login(@PathVariable String username, @PathVariable String password){
         User user = repo.findByUsername(username);
@@ -54,12 +54,38 @@ public class UserController {
             return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
 		}
         return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
-
     }
 
-    //Logout User
+    //Login User with Pathvariables
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> loginWithUserObject(@RequestBody User requestUser){
+
+        User user = repo.findByUsername(requestUser.getUsername());
+        boolean userLoggedIn = false;
+
+        // Does user exist?
+        if (user != null) {
+
+            // Is the password correct?
+            if (user.getPassword().equals(requestUser.getPassword())) {
+                userLoggedIn = true;
+                return new ResponseEntity<>(userLoggedIn, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
+    }
+
+    //Logout User without Parameters
     @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
     public ResponseEntity<Boolean> logout(){
+        boolean userLoggedOut = true;
+        return new ResponseEntity<>(userLoggedOut, HttpStatus.OK);
+    }
+
+    //Logout User with Parameters
+    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user){
         boolean userLoggedOut = true;
         return new ResponseEntity<>(userLoggedOut, HttpStatus.OK);
     }
