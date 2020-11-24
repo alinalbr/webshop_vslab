@@ -16,6 +16,7 @@ services:
             MYSQL_DATABASE: products_core_database
             MYSQL_USER: user
             MYSQL_PASSWORD: password
+            PORT: 3306
         ports:
           - 3306:3306
         volumes:
@@ -41,6 +42,7 @@ services:
             MYSQL_DATABASE: user_core_database
             MYSQL_USER: user
             MYSQL_PASSWORD: password
+            PORT: 3307
         ports:
           - 3307:3306
         volumes:
