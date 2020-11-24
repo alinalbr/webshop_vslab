@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+    eurekaserver:
+        build: eurekaServer
+        container_name: eurekaserver
+        ports:
+            - 8761:8761
+        #volumes:
+        #    - ./eurekaServer:/EurekaServerApplication
     products_core_database: 
         image: mysql
         container_name: products_core_database
@@ -17,13 +24,16 @@ services:
         build: ProductCoreApplication
         container_name: products_core_backend
         ports:
-          - "8080:8080"
+          - 8080:8080
         volumes:
           - ./ProductCoreApplication:/ProductCoreApplication
         depends_on:
           - products_core_database
+          - eurekaserver
         links:
           - products_core_database
+          - eurekaserver
 
 volumes:
     products_database_data:
+

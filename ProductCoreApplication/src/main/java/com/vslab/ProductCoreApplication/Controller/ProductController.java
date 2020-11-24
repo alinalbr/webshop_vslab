@@ -41,7 +41,6 @@ public class ProductController {
                 return product.getName().equals(searchValue);
             })
             .collect(Collectors.toList());
-
         }
 
         if (minPreis != null) {
@@ -100,7 +99,7 @@ public class ProductController {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         } else {
             repo.deleteById(productId);
-            return this.getProduct(productId);
+            return new ResponseEntity<Void>(HttpStatus.OK);
         }
     }
 }
