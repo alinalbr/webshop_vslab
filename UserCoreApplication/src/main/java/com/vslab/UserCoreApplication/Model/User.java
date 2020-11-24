@@ -1,4 +1,6 @@
-package com.vslab.UserSrvApplication.Model;
+package com.vslab.UserCoreApplication.Model;
+
+import io.micrometer.core.lang.NonNull;
 
 import javax.persistence.*;
 
@@ -11,19 +13,22 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "firstname", nullable = false)
+    @NonNull
     private String firstname;
-    @Column(name = "lastname", nullable = false)
-    private String lastname;
-    @Column(name = "username", unique = true, nullable = false)
-    private String username;
-    @Column(name = "password", nullable = false)
-    private String password;
-    @ManyToOne()
-    @JoinColumn(name="role", nullable = false)
-    private Role role;
 
-    public User(String firstname, String lastname, String username, String password, Role role) {
+    @NonNull
+    private String lastname;
+
+    @NonNull
+    private String username;
+
+    @NonNull
+    private String password;
+
+    @NonNull
+    private Long role; // 1 = admin, 2 = user
+
+    public User(String firstname, String lastname, String username, String password, Long role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
@@ -74,11 +79,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public Long getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Long role) {
         this.role = role;
     }
 }
