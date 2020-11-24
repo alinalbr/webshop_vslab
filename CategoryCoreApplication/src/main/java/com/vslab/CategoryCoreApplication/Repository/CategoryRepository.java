@@ -1,11 +1,18 @@
-package com.vslab.UserSrvApplication.Repository;
+package com.vslab.CategoryCoreApplication.Repository;
 
-import com.vslab.UserSrvApplication.Model.Category;
-import com.vslab.UserSrvApplication.Model.Role;
+import com.vslab.CategoryCoreApplication.Model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Category findOne(Long categoryId);
+    Optional<Category> findById(Long id); 	// GET /Category/{categoryId}
 
+    List<Category> findAll(); 				// GET /category
+
+    void deleteById(Long id); 				// DELETE /Category/{categoryId}
+
+    Category save(Category category);		// POST /Category
 }
