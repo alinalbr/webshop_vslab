@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   application:
     name: user-core-service
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eurekaserver:8761/eureka/
   instance:
     preferIpAddress: true
     leaseRenewalIntervalInSeconds: 5
