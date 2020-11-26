@@ -3,6 +3,18 @@ server:
 spring:
   application:
     name: user-core-service
+  datasource:
+    url: jdbc:mysql://user_core_database:3306/user_core_database?createDatabaseIfNotExist=true
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
 eureka:
   client:
     serviceUrl:
