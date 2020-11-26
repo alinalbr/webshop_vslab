@@ -18,15 +18,17 @@ public class CategoryController {
     @Autowired
     private CategoryRepository repo;
 
+
+    //@JsonIgnoreProperties("productIds")
     @GetMapping("")		// GET /Category
-    @JsonIgnoreProperties("productIds")
     public ResponseEntity<List<Category>> getCategories() {
         List<Category> category = repo.findAll();
         return new ResponseEntity<List<Category>>(category, HttpStatus.OK);
     }
 
+
+    //@JsonIgnoreProperties({"productIds", "id"})
     @GetMapping("/{categoryId}")		// GET /Category/{categoryId}
-    @JsonIgnoreProperties({"productIds", "id"})
     public ResponseEntity<Optional<Category>> getCategory(@PathVariable Long categoryId) {
         Optional<Category> category = repo.findById(categoryId);
         if (!category.isPresent()) {
@@ -59,7 +61,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/{categoryId}")					// POST /Category/{categoryId} new prod to category
+    /*@PostMapping("/{categoryId}")					// POST /Category/{categoryId} new prod to category
     public ResponseEntity<Void> addProductToCategory(@RequestBody Long productId, @PathVariable Long categoryId) {
     	Optional<Category> category = repo.findById(categoryId);
         if (category.isPresent()) {
@@ -81,6 +83,6 @@ public class CategoryController {
         } else {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 }
 

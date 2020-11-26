@@ -44,7 +44,7 @@ services:
             MYSQL_PASSWORD: password
             PORT: 3307
         ports:
-          - 3307:3306
+          - 3307:3307
         volumes:
           - user_core_database_data:/var/lib/mysql
     user_core_backend:

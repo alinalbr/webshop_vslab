@@ -3,13 +3,12 @@ package com.vslab.CategoryCoreApplication.Model;
 import javax.persistence.*;
 
 import io.micrometer.core.lang.NonNull;
-import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="Catgory")
+@Table(name="Category")
 public class Category {
 
     //Primärschlüssel, dessen ID automatische erzeugt wird
@@ -20,16 +19,18 @@ public class Category {
     @NonNull
     private String name;
 
-    @NonNull
-    @ElementCollection
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @CollectionTable(name = "PRODUCTS_OF_CATEGORY", joinColumns = @JoinColumn(name = "CAT_ID"))
-    private List<Long> productIds;
+    //@NonNull
+    //@ElementCollection
+    //private List<Long> productIds;
 
 
     public Category(String name) {
         this.name = name;
-        this.productIds = new ArrayList<Long>();
+        //this.productIds = new ArrayList<Long>();
+    }
+
+    public Category() {
+
     }
 
     public Long getId() {
@@ -48,7 +49,7 @@ public class Category {
         this.name = name;
     }
 
-    public List<Long> getProductIds() {
+    /*public List<Long> getProductIds() {
         return productIds;
     }
 
@@ -62,6 +63,6 @@ public class Category {
 
     public void removeProduct(Long productId) {
         this.productIds.remove(productId);
-    }
+    }*/
 
 }

@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  eurekaserver:
-    build: eurekaServer
-    container_name: eurekaserver
-    ports:
-      - 8761:8761
-    volumes:
-      - ./eurekaServer:/EurekaServerApplication
+  #eurekaserver:
+  #build: eurekaServer
+  #container_name: eurekaserver
+    #ports:
+      #- 8761:8761
+    #volumes:
+      #- ./eurekaServer:/EurekaServerApplication
   category_core_database:
       image: mysql
       container_name: category_core_database
@@ -16,22 +16,22 @@ services:
           MYSQL_DATABASE: category_core_database
           MYSQL_USER: user
           MYSQL_PASSWORD: password
-          PORT: 3308
+          PORT: 3306
       ports:
-        - 3308:3306
+        - 3306:3306
       volumes:
         - category_core_database_data:/var/lib/mysql
   category_core_backend:
       build: CategoryCoreApplication
       container_name: category_core_backend
       ports:
-        - 8082:8080
+        - 8082:8082
       depends_on:
         - category_core_database
-        - eurekaserver
+        #- eurekaserver
       links:
         - category_core_database
-        - eurekaserver
+        #- eurekaserver
 volumes:
     category_core_database_data:
 

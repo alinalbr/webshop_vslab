@@ -3,12 +3,12 @@ server:
 spring:
   application:
     name: category-core-service
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eurekaserver:8761/eureka/
-  instance:
-    preferIpAddress: true
-    leaseRenewalIntervalInSeconds: 5
-    metadataMap:
-      instanceId: "${spring.application.name}:${random.value}"
+#eureka:
+  #client:
+    #serviceUrl:
+      #defaultZone: http://eurekaserver:8761/eureka/
+  #instance:
+    #preferIpAddress: true
+    #leaseRenewalIntervalInSeconds: 5
+    #metadataMap:
+     # instanceId: "${spring.application.name}:${random.value}"
