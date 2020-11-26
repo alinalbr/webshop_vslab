@@ -1,7 +1,5 @@
 package com.vslab.UserCmpApplication;
 
-import io.micrometer.core.lang.NonNull;
-
 public class User {
 
     private Long id;

@@ -2,7 +2,6 @@ package com.vslab.UserCmpApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -23,25 +22,12 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user) {
         // pass a new user to core service
 
-        ResponseEntity<User> responseEntity;
-        responseEntity = new ResponseEntity<>(userClient.createUser(user), HttpStatus.OK);
+        ResponseEntity<User> responseEntity = new ResponseEntity<>(userClient.createUser(user), HttpStatus.CREATED);
 
         if (responseEntity == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
-
-
-        /*
-        ResponseEntity<User> response = restTemplate.postForEntity(
-                "http://user-core-service/user/",
-                user,
-                User.class);
-        if (response == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-         */
+        return responseEntity;
     }
 
     //Get user
@@ -60,80 +46,42 @@ public class UserController {
             return new ResponseEntity<User>(tp.getStatusCode());
         }
 
-
         return responseEntity;
-
-
-        /*
-        ResponseEntity<User> response;
-        try {
-            response = restTemplate.exchange(
-                    "http://user-core-service/users/" + userId,
-                    HttpMethod.GET,
-                    null,
-                    User.class
-            );
-        } catch (HttpStatusCodeException e) {
-            return new ResponseEntity<User>(e.getStatusCode());
-        }
-        */
-
     }
 
     //Login user
     @PostMapping("/login")
-    public ResponseEntity<Boolean> loginUser(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Boolean> loginUser(@RequestBody User user) {
+        ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(userClient.loginUser(user), HttpStatus.OK);
 
+        if (responseEntity == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        ResponseEntity<Boolean> responseEntity;
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-
-        try {
+        /*try {
             responseEntity = new ResponseEntity<>(userClient.loginUser(user), HttpStatus.OK);
         } catch (HttpStatusCodeException tp) {
             return new ResponseEntity<>(tp.getStatusCode());
-        }
+        }*/
 
         return responseEntity;
-
-        /*
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        ResponseEntity<User> response = restTemplate.postForEntity(
-                "http://user-core-service/user/login", user,
-                User.class);
-        if (response == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-         */
     }
 
     //Logout user
     @PostMapping("/logout")
     public ResponseEntity<Boolean> logoutUser(@RequestBody User user) {
 
-        ResponseEntity<Boolean> responseEntity;
+        ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(userClient.logoutUser(user), HttpStatus.OK);
 
-        try {
+        if (responseEntity == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        /*try {
             responseEntity = new ResponseEntity<>(userClient.logoutUser(user), HttpStatus.OK);
         } catch (HttpStatusCodeException tp) {
             return new ResponseEntity<>(tp.getStatusCode());
-        }
+        }*/
 
         return responseEntity;
-
-        /* ResponseEntity<User> response = restTemplate.postForEntity(
-                "http://user-core-service/user/logout", user,
-                User.class);
-        if (response == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-         */
     }
 }

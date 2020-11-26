@@ -91,7 +91,7 @@ public class UserController {
     }*/
 
     //Logout User with Parameters
-    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
+    @PostMapping("/logout")
     public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user){
         boolean userLoggedOut = true;
         return new ResponseEntity<>(userLoggedOut, HttpStatus.OK);

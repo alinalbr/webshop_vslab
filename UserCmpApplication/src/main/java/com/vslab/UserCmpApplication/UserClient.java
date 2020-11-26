@@ -41,14 +41,14 @@ public class UserClient {
 
     //Login User
     public Boolean loginUser(User user) {
-        Boolean response =
+        boolean response =
                 restTemplate.postForObject("http://user-core-service:8081/user/login", user, Boolean.class);
         return response;
     }
 
     //Logout User
     public Boolean logoutUser(User user) {
-        Boolean response =
+        boolean response =
                 restTemplate.postForObject("http://user-core-service:8081/user/logout", user, Boolean.class);
         return response;
     }
