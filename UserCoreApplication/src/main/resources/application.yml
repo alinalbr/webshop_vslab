@@ -4,7 +4,7 @@ spring:
   application:
     name: user-core-service
   datasource:
-    url: jdbc:mysql://user_core_database:3307/user_core_database?createDatabaseIfNotExist=true
+    url: jdbc:mysql://user_core_database:3306/user_core_database?createDatabaseIfNotExist=true
     username: user
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver

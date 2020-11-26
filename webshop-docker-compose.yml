@@ -50,6 +50,8 @@ services:
     user_core_backend:
         build: UserCoreApplication
         container_name: user_core_backend
+        volumes:
+          - ./UserCoreApplication:/UserCoreApplication
         ports:
           - 8081:8081
         depends_on:
