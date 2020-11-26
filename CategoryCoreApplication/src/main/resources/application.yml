@@ -3,12 +3,24 @@ server:
 spring:
   application:
     name: category-core-service
-#eureka:
-  #client:
-    #serviceUrl:
-      #defaultZone: http://eurekaserver:8761/eureka/
-  #instance:
-    #preferIpAddress: true
-    #leaseRenewalIntervalInSeconds: 5
-    #metadataMap:
-     # instanceId: "${spring.application.name}:${random.value}"
+  datasource:
+    url: jdbc:mysql://category_core_database:3306/category_core_database?createDatabaseIfNotExist=true
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 5
+    metadataMap:
+      instanceId: "${spring.application.name}:${random.value}"

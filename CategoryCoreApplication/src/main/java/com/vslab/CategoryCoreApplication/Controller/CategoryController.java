@@ -1,10 +1,14 @@
 package com.vslab.CategoryCoreApplication.Controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.vslab.CategoryCoreApplication.Model.Category;
 import com.vslab.CategoryCoreApplication.Repository.CategoryRepository;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,9 +43,8 @@ public class CategoryController {
     }
 
     @PostMapping("")					// POST /Category
-    public ResponseEntity<Void> addCategory(@RequestBody String name) {
-        Category categoryToBeAdded = new Category(name);
-        Category createdCategory = repo.save(categoryToBeAdded);
+    public ResponseEntity<Void> addCategory(@RequestBody Category category) {
+        Category createdCategory = repo.save(category);
         if (createdCategory == null) {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         } else {
