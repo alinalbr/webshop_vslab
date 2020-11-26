@@ -32,7 +32,7 @@ public class UserController {
     //Add new User
     @PostMapping("")
     public ResponseEntity<Void> addUser(@RequestBody User user) {
-        if (!repo.existsById(user.getId())) {
+        if (!repo.existsByUsername(user.getUsername())) {
             User userCreated = repo.save(user);
             if (userCreated != null) {
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -45,8 +45,8 @@ public class UserController {
 
 
     //Login User with Pathvariables
-    @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody String username, @RequestBody String password) {
+    /*@PostMapping("/login")
+    public ResponseEntity<Boolean> login(@RequestBody User user) {
         Optional<User> user = repo.findByUsername(username);
         boolean userLoggedIn = false;
 
@@ -61,41 +61,41 @@ public class UserController {
             return new ResponseEntity<Boolean>(userLoggedIn, HttpStatus.BAD_REQUEST);
 		}
         return new ResponseEntity<Boolean>(userLoggedIn, HttpStatus.CONFLICT);
-    }
+    }*/
 
     //Login User with Pathvariables
-    /*@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public ResponseEntity<Boolean> loginWithUserObject(@RequestBody User requestUser){
 
-        User user = repo.findByUsername(requestUser.getUsername());
+        Optional<User> user = repo.findByUsername(requestUser.getUsername());
         boolean userLoggedIn = false;
 
         // Does user exist?
         if (user != null) {
 
             // Is the password correct?
-            if (user.getPassword().equals(requestUser.getPassword())) {
+            if (user.get().getPassword().equals(requestUser.getPassword())) {
                 userLoggedIn = true;
                 return new ResponseEntity<>(userLoggedIn, HttpStatus.OK);
             }
             return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
-    }*/
+    }
 
     //Logout User without Parameters
-    @PostMapping("/logout")
+    /*@PostMapping("/logout")
     public ResponseEntity<Boolean> logout(){
         boolean userLoggedOut = true;
         return new ResponseEntity<Boolean>(userLoggedOut, HttpStatus.OK);
-    }
+    }*/
 
     //Logout User with Parameters
-    /*@RequestMapping(value = "/user/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
     public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user){
         boolean userLoggedOut = true;
         return new ResponseEntity<>(userLoggedOut, HttpStatus.OK);
-    }*/
+    }
 
 
 
