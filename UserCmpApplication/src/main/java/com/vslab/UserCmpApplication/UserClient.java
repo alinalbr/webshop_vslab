@@ -18,17 +18,17 @@ public class UserClient {
     private RestTemplate restTemplate;
 
     //Get User
-    //@HystrixCommand(fallbackMethod = "getUserCache", commandProperties = {
-      //      @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2") })
+    @HystrixCommand(fallbackMethod = "getUserCache", commandProperties = {
+        @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
+    })
     public User getUser(Long userId) {
         User tmpuser =
                 restTemplate.getForObject("http://user-core-service:8081/user/" + userId, User.class);
-        //userCache.putIfAbsent(userId, tmpuser);
+        userCache.putIfAbsent(userId, tmpuser);
         return tmpuser;
     }
 
     public User getUserCache(Long userId) {
-
         return userCache.getOrDefault(userId, new User());
     }
 
