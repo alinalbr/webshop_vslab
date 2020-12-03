@@ -95,6 +95,13 @@ services:
       - category_core_database
       - category_core_backend
       - eurekaserver
+  zuulserver:
+    build: zuul
+    container_name: zuulserver
+    ports:
+      - 8085:8085
+    depends_on:
+      - eurekaserver
 volumes:
   products_database_data:
   user_core_database_data:

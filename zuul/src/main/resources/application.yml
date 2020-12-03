@@ -1,0 +1,33 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: zuulserver
+  cloud:
+    config:
+      enable: false
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
+zuul:
+  #ignoredServices: '*'
+  SendErrorFilter:
+    error:
+      disable: true
+  routes:
+    user:
+      path: /user/**
+      url: http://user-composite-service:8083
+    category:
+      path: /category/**
+      url: http://catalog-composite-service:8084
+    product:
+      path: /product/**
+      url: http://catalog-composite-service:8084
