@@ -84,12 +84,10 @@ public class ProductController {
     @DeleteMapping("/category/{categoryId}")
     public ResponseEntity<Void> deleteProductsMatchingCategory(@PathVariable Long categoryId) {
        List<Product> productsMatchingCategory = repo.findByCategoryId(categoryId);
-        if (productsMatchingCategory.size() == 0) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-        } else {
+        if (productsMatchingCategory.size() > 0) {
             repo.deleteByCategoryId(categoryId);
-            return new ResponseEntity<Void>(HttpStatus.OK);
         }
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}")

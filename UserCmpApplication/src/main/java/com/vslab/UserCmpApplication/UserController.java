@@ -58,12 +58,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        /*try {
-            responseEntity = new ResponseEntity<>(userClient.loginUser(user), HttpStatus.OK);
-        } catch (HttpStatusCodeException tp) {
-            return new ResponseEntity<>(tp.getStatusCode());
-        }*/
-
         return responseEntity;
     }
 
@@ -76,11 +70,6 @@ public class UserController {
         if (responseEntity == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        /*try {
-            responseEntity = new ResponseEntity<>(userClient.logoutUser(user), HttpStatus.OK);
-        } catch (HttpStatusCodeException tp) {
-            return new ResponseEntity<>(tp.getStatusCode());
-        }*/
 
         return responseEntity;
     }

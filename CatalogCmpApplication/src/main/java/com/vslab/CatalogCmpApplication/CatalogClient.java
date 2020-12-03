@@ -3,10 +3,13 @@ package com.vslab.CatalogCmpApplication;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,6 +31,32 @@ public class CatalogClient {
         return tmpproduct;
     }
 
+    public Product addProduct(Product product) {
+        Product tmpproduct = restTemplate.postForObject("http://product-core-service:8080/product", product, Product.class);
+        return tmpproduct;
+    }
+
+    public List<Product> getProducts(String searchValue, Double maxPreis, Double minPreis) {
+        List<Product> tmpproducts = restTemplate.getForObject(
+                "http://product-core-service:8080/product" +
+                        ((searchValue != null || maxPreis != null || minPreis != null) ? "?": "") +
+                        (searchValue != null ? ("searchValue=" + searchValue + "&") : "") +
+                        (maxPreis != null ? ("maxPreis=" + maxPreis + "&") : "") +
+                        (minPreis != null ? ("minPreis=" + minPreis) : "")
+                , List.class);
+
+        return tmpproducts;
+    }
+
+    public boolean deleteProduct(Long productId) {
+        try {
+            restTemplate.delete("http://product-core-service:8080/product/" + productId);
+            return true;
+        } catch (HttpStatusCodeException error) {
+            throw error;
+        }
+    }
+
     @HystrixCommand(fallbackMethod = "getCategoryCache", commandProperties = {
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
@@ -38,8 +67,24 @@ public class CatalogClient {
         return tmpcategory;
     }
 
-    public Product getProductCache(Long userId) {
-        return productCache.getOrDefault(userId, new Product());
+    public Category addCategory(Category category) {
+        Category tmpcategory = restTemplate.postForObject("http://category-core-service:8082/category", category, Category.class);
+        return tmpcategory;
+    }
+
+    public boolean deleteCategory(Long categoryId) {
+        try {
+            restTemplate.delete("http://category-core-service:8082/category/" + categoryId);
+            restTemplate.delete("http://product-core-service:8080/product/category/" + categoryId);
+            return true;
+        } catch (HttpStatusCodeException error) {
+            // category wiederherstellen, wenn in Zeile 78 etwas schief geht?
+            throw error;
+        }
+    }
+
+    public Product getProductCache(Long productId) {
+        return productCache.getOrDefault(productId, new Product());
     }
 
     public Category getCategoryCache(Long categoryId) {
