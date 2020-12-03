@@ -1,8 +1,8 @@
 server:
-  port: 8083
+  port: 8084
 spring:
   application:
-    name: user-composite-service
+    name: catalog-composite-service
 eureka:
   client:
     serviceUrl:
