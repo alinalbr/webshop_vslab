@@ -28,7 +28,7 @@ public class CategoryController {
     public ResponseEntity<Optional<Category>> getCategory(@PathVariable Long categoryId) {
         Optional<Category> category = repo.findById(categoryId);
         if (!category.isPresent()) {
-            return new ResponseEntity<Optional<Category>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<Optional<Category>>(category, HttpStatus.OK);
         }

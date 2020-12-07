@@ -64,10 +64,10 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<Optional<Product>> getProduct(@PathVariable Long productId) {
         Optional<Product> product = repo.findById(productId);
-        if (!product.isPresent()) {
-            return new ResponseEntity<Optional<Product>>(HttpStatus.NOT_FOUND);
+        if (product.isPresent()) {
+            return new ResponseEntity<>(product, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Optional<Product>>(product, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

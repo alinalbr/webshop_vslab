@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpStatusCodeException;
+
 import java.util.Optional;
 
 @RestController
@@ -21,23 +23,19 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable Long userId) {
         Optional<User> user = repo.findById(userId);
-        if ( user != null ) {
-            return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
+        if ( user.isPresent() ) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("")
     public ResponseEntity<Void> addUser(@RequestBody User user) {
         if (!repo.existsByUsername(user.getUsername())) {
             User userCreated = repo.save(user);
-            if (userCreated != null) {
-                return new ResponseEntity<Void>(HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-            }
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/login")

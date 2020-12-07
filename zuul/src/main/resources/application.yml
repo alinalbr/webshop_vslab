@@ -17,17 +17,19 @@ eureka:
     serviceUrl:
       defaultZone: http://eurekaserver:8761/eureka/
 zuul:
-  #ignoredServices: '*'
-  SendErrorFilter:
-    error:
-      disable: true
+  host:
+    socket-timeout-millis: 20000
+    connect-timeout-millis: 20000
+  ignoredServices: '*'
   routes:
-    user:
+    userCompositeService:
       path: /user/**
-      url: http://user-composite-service:8083
-    category:
+      stripPrefix: false
+    catalogCategory:
       path: /category/**
-      url: http://catalog-composite-service:8084
-    product:
+      serviceId: catalogCompositeService
+      stripPrefix: false
+    catalogProduct:
       path: /product/**
-      url: http://catalog-composite-service:8084
+      serviceId: catalogCompositeService
+      stripPrefix: false

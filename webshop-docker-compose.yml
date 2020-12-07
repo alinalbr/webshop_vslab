@@ -102,6 +102,8 @@ services:
       - 8085:8085
     depends_on:
       - eurekaserver
+      - user_composite_backend
+      - catalog_composite_backend
 volumes:
   products_database_data:
   user_core_database_data:

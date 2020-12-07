@@ -15,6 +15,13 @@ public class Category {
 
     }
 
+    public boolean isEmptyObject() {
+        return (
+                    this.id == null
+                    && this.name == null
+                );
+    }
+
     public Long getId() {
         return id;
     }

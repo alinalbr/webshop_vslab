@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Component
@@ -25,20 +26,18 @@ public class CatalogClient {
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
     public Product getProduct(Long productId) {
-        Product tmpproduct =
-                restTemplate.getForObject("http://product-core-service:8080/product/" + productId, Product.class);
+        Product tmpproduct = restTemplate.getForObject("http://productCoreService:8080/product/" + productId, Product.class);
         productCache.putIfAbsent(productId, tmpproduct);
         return tmpproduct;
     }
 
-    public Product addProduct(Product product) {
-        Product tmpproduct = restTemplate.postForObject("http://product-core-service:8080/product", product, Product.class);
-        return tmpproduct;
+    public Void addProduct(Product product) {
+        return restTemplate.postForObject("http://productCoreService:8080/product", product, Void.class);
     }
 
     public List<Product> getProducts(String searchValue, Double maxPreis, Double minPreis) {
         List<Product> tmpproducts = restTemplate.getForObject(
-                "http://product-core-service:8080/product" +
+                "http://productCoreService:8080/product" +
                         ((searchValue != null || maxPreis != null || minPreis != null) ? "?": "") +
                         (searchValue != null ? ("searchValue=" + searchValue + "&") : "") +
                         (maxPreis != null ? ("maxPreis=" + maxPreis + "&") : "") +
@@ -50,7 +49,7 @@ public class CatalogClient {
 
     public boolean deleteProduct(Long productId) {
         try {
-            restTemplate.delete("http://product-core-service:8080/product/" + productId);
+            restTemplate.delete("http://productCoreService:8080/product/" + productId);
             return true;
         } catch (HttpStatusCodeException error) {
             throw error;
@@ -62,20 +61,20 @@ public class CatalogClient {
     })
     public Category getCategory(Long categoryId) {
         Category tmpcategory =
-                restTemplate.getForObject("http://category-core-service:8082/category/" + categoryId, Category.class);
+                restTemplate.getForObject("http://categoryCoreService:8082/category/" + categoryId, Category.class);
         categoryCache.putIfAbsent(categoryId, tmpcategory);
         return tmpcategory;
     }
 
     public Category addCategory(Category category) {
-        Category tmpcategory = restTemplate.postForObject("http://category-core-service:8082/category", category, Category.class);
+        Category tmpcategory = restTemplate.postForObject("http://categoryCoreService:8082/category", category, Category.class);
         return tmpcategory;
     }
 
     public boolean deleteCategory(Long categoryId) {
         try {
-            restTemplate.delete("http://category-core-service:8082/category/" + categoryId);
-            restTemplate.delete("http://product-core-service:8080/product/category/" + categoryId);
+            restTemplate.delete("http://categoryCoreService:8082/category/" + categoryId);
+            restTemplate.delete("http://productCoreService:8080/product/category/" + categoryId);
             return true;
         } catch (HttpStatusCodeException error) {
             // category wiederherstellen, wenn in Zeile 78 etwas schief geht?
