@@ -1,6 +1,7 @@
 package com.vslab.ProductCoreApplication.Controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.vslab.ProductCoreApplication.Model.Product;
 import com.vslab.ProductCoreApplication.Repository.ProductRepository;
@@ -24,7 +25,7 @@ public class ProductController {
     @Autowired
     private ProductRepository repo;
 
-    @GetMapping("") // List<Product> zu Product[]
+    @GetMapping("")
     public ResponseEntity<Product[]> getProducts(
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "minPreis", required = false) Double minPreis,
@@ -32,32 +33,25 @@ public class ProductController {
             ) {
 
         List<Product> products = repo.findAll();
-        Product[] productsArray = products.stream().toArray(Product[] ::new);
 
-        // TODO Filters auf Array umbauen, wenns geht
-        /*if (searchValue != null) {
-            products = products.stream()
-            .filter((Product product) -> {
+        if (searchValue != null) {
+            products = products.stream().filter((Product product) -> {
                 return product.getName().equals(searchValue);
-            })
-            .collect(Collectors.toList());
+            }).collect(Collectors.toList());
         }
 
         if (minPreis != null) {
-            products = products.stream()
-                .filter((Product product) -> {
+            products = products.stream().filter((Product product) -> {
                     return product.getPrice() >= minPreis;
-                })
-            .collect(Collectors.toList());
+                }).collect(Collectors.toList());
         }
         if (maxPreis != null) {
-            products = products.stream()
-            .filter((Product product) -> {
+            products = products.stream().filter((Product product) -> {
                 return product.getPrice() <= maxPreis;
-            })
-            .collect(Collectors.toList());
-        }*/
+            }).collect(Collectors.toList());
+        }
 
+        Product[] productsArray = products.stream().toArray(Product[] ::new);
         return new ResponseEntity<Product[]>(productsArray, HttpStatus.OK);
     }
 
