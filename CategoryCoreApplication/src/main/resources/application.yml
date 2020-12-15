@@ -2,7 +2,7 @@ server:
   port: 8082
 spring:
   application:
-    name: category-core-service
+    name: categoryCoreService
   datasource:
     url: jdbc:mysql://category_core_database:3306/category_core_database?createDatabaseIfNotExist=true
     username: user

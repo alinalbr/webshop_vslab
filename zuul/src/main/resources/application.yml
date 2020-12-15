@@ -1,0 +1,35 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: zuulserver
+  cloud:
+    config:
+      enable: false
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
+zuul:
+  host:
+    socket-timeout-millis: 20000
+    connect-timeout-millis: 20000
+  ignoredServices: '*'
+  routes:
+    userCompositeService:
+      path: /user/**
+      stripPrefix: false
+    catalogCategory:
+      path: /category/**
+      serviceId: catalogCompositeService
+      stripPrefix: false
+    catalogProduct:
+      path: /product/**
+      serviceId: catalogCompositeService
+      stripPrefix: false

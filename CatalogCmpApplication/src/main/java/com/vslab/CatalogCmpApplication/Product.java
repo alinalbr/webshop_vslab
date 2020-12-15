@@ -6,6 +6,7 @@ public class Product {
     private String name;
     private Double price;
     private Long categoryId;
+    private String categoryName;
     private String details;
 
     public Product(String name, Double price, Long categoryId, String details) {
@@ -16,6 +17,16 @@ public class Product {
     }
 
     public Product() {
+    }
+
+    public boolean isEmptyObject() {
+        return (
+                    this.id == null
+                    && this.name == null
+                    && this.price == null
+                    && this.categoryId == null
+                    && this.details == null
+                );
     }
 
     public Long getId() {
@@ -48,6 +59,14 @@ public class Product {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDetails() {

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpStatusCodeException;
+
 import java.util.Optional;
 
 @RestController
@@ -18,52 +20,24 @@ public class UserController {
     @Autowired
     private UserRepository repo;
 
-    //GET User with userId
     @GetMapping("/{userId}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable Long userId) {
         Optional<User> user = repo.findById(userId);
-        if ( user != null ) {
-            return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
+        if ( user.isPresent() ) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
-    //Add new User
     @PostMapping("")
     public ResponseEntity<Void> addUser(@RequestBody User user) {
         if (!repo.existsByUsername(user.getUsername())) {
             User userCreated = repo.save(user);
-            if (userCreated != null) {
-                return new ResponseEntity<Void>(HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-            }
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-
-    //Login User with Pathvariables
-    /*@PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody User user) {
-        Optional<User> user = repo.findByUsername(username);
-        boolean userLoggedIn = false;
-
-        // Does user exist?
-		if (user.isPresent()) {
-
-        // Is the password correct?
-            if (user.get().getPassword().equals(password)) {
-                userLoggedIn = true;
-                return new ResponseEntity<Boolean>(userLoggedIn, HttpStatus.OK);
-            }
-            return new ResponseEntity<Boolean>(userLoggedIn, HttpStatus.BAD_REQUEST);
-		}
-        return new ResponseEntity<Boolean>(userLoggedIn, HttpStatus.CONFLICT);
-    }*/
-
-    //Login User with Pathvariables
     @PostMapping("/login")
     public ResponseEntity<Boolean> loginWithUserObject(@RequestBody User requestUser){
 
@@ -83,14 +57,6 @@ public class UserController {
         return new ResponseEntity<>(userLoggedIn, HttpStatus.CONFLICT);
     }
 
-    //Logout User without Parameters
-    /*@PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(){
-        boolean userLoggedOut = true;
-        return new ResponseEntity<Boolean>(userLoggedOut, HttpStatus.OK);
-    }*/
-
-    //Logout User with Parameters
     @PostMapping("/logout")
     public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user){
         boolean userLoggedOut = true;

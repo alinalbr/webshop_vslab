@@ -1,7 +1,6 @@
 package com.vslab.ProductCoreApplication.Controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.vslab.ProductCoreApplication.Model.Product;
@@ -27,47 +26,42 @@ public class ProductController {
     private ProductRepository repo;
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Product[]> getProducts(
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "minPreis", required = false) Double minPreis,
             @RequestParam(value = "maxPreis", required = false) Double maxPreis
             ) {
-                
+
         List<Product> products = repo.findAll();
 
         if (searchValue != null) {
-            products = products.stream()
-            .filter((Product product) -> {
+            products = products.stream().filter((Product product) -> {
                 return product.getName().equals(searchValue);
-            })
-            .collect(Collectors.toList());
+            }).collect(Collectors.toList());
         }
 
         if (minPreis != null) {
-            products = products.stream()
-                .filter((Product product) -> {
+            products = products.stream().filter((Product product) -> {
                     return product.getPrice() >= minPreis;
-                })
-            .collect(Collectors.toList());
+                }).collect(Collectors.toList());
         }
         if (maxPreis != null) {
-            products = products.stream()
-            .filter((Product product) -> {
+            products = products.stream().filter((Product product) -> {
                 return product.getPrice() <= maxPreis;
-            })
-            .collect(Collectors.toList());
+            }).collect(Collectors.toList());
         }
 
-        return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+        Product[] productsArray = products.stream().toArray(Product[] ::new);
+        return new ResponseEntity<Product[]>(productsArray, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Optional<Product>> getProduct(@PathVariable Long productId) {
         Optional<Product> product = repo.findById(productId);
-        if (!product.isPresent()) {
-            return new ResponseEntity<Optional<Product>>(HttpStatus.NOT_FOUND);
+        if (product.isPresent()) {
+            return new ResponseEntity<>(product, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Optional<Product>>(product, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

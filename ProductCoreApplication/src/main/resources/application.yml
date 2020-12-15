@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: product-core-service
+    name: productCoreService
   datasource:
     url: jdbc:mysql://products_core_database:3306/products_core_database?createDatabaseIfNotExist=true
     username: user
