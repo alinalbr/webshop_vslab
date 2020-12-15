@@ -1,6 +1,5 @@
 package com.vslab.CatalogCmpApplication;
 
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CatalogController {
@@ -55,18 +53,18 @@ public class CatalogController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Void> addProduct(@RequestBody Product product) {
         if (product == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try {
             Category category = catalogClient.getCategory(product.getCategoryId()); // check if given category exists
             if (!category.isEmptyObject()) {
                 catalogClient.addProduct(product);
-                return new ResponseEntity<>(product, HttpStatus.CREATED);
+                return new ResponseEntity<>(HttpStatus.CREATED);
             } else {
-                return new ResponseEntity<>(new Product(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (HttpStatusCodeException tp) {
             return new ResponseEntity<>(tp.getStatusCode());
@@ -74,17 +72,30 @@ public class CatalogController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Product[]> getProducts(
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "minPreis", required = false) Double minPreis,
             @RequestParam(value = "maxPreis", required = false) Double maxPreis
     ) {
-        ResponseEntity<List<Product>> responseEntity;
+        ResponseEntity<Product[]> responseEntity;
 
         try {
             responseEntity = new ResponseEntity<>(catalogClient.getProducts(searchValue, maxPreis, minPreis), HttpStatus.OK);
         } catch (HttpStatusCodeException tp) {
-            return new ResponseEntity<List<Product>>(tp.getStatusCode());
+            return new ResponseEntity<>(tp.getStatusCode());
+        }
+
+        return responseEntity;
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<Category[]> getCategories( ) {
+        ResponseEntity<Category[]> responseEntity;
+
+        try {
+            responseEntity = new ResponseEntity<>(catalogClient.getCategories(), HttpStatus.OK);
+        } catch (HttpStatusCodeException tp) {
+            return new ResponseEntity<Category[]>(tp.getStatusCode());
         }
 
         return responseEntity;

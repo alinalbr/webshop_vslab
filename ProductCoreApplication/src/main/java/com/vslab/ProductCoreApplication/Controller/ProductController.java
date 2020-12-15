@@ -1,8 +1,6 @@
 package com.vslab.ProductCoreApplication.Controller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import com.vslab.ProductCoreApplication.Model.Product;
 import com.vslab.ProductCoreApplication.Repository.ProductRepository;
@@ -26,16 +24,18 @@ public class ProductController {
     @Autowired
     private ProductRepository repo;
 
-    @GetMapping("")
-    public ResponseEntity<List<Product>> getProducts(
+    @GetMapping("") // List<Product> zu Product[]
+    public ResponseEntity<Product[]> getProducts(
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "minPreis", required = false) Double minPreis,
             @RequestParam(value = "maxPreis", required = false) Double maxPreis
             ) {
-                
-        List<Product> products = repo.findAll();
 
-        if (searchValue != null) {
+        List<Product> products = repo.findAll();
+        Product[] productsArray = products.stream().toArray(Product[] ::new);
+
+        // TODO Filters auf Array umbauen, wenns geht
+        /*if (searchValue != null) {
             products = products.stream()
             .filter((Product product) -> {
                 return product.getName().equals(searchValue);
@@ -56,9 +56,9 @@ public class ProductController {
                 return product.getPrice() <= maxPreis;
             })
             .collect(Collectors.toList());
-        }
+        }*/
 
-        return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+        return new ResponseEntity<Product[]>(productsArray, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")

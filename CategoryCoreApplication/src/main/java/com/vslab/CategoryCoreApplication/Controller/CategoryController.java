@@ -19,9 +19,10 @@ public class CategoryController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<Category[]> getCategories() {
         List<Category> category = repo.findAll();
-        return new ResponseEntity<List<Category>>(category, HttpStatus.OK);
+        Category[] categoryArray = category.stream().toArray(Category[] ::new);
+        return new ResponseEntity<Category[]>(categoryArray, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
