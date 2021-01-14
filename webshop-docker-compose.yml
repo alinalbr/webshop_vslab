@@ -84,6 +84,7 @@ services:
       - user_core_database
       - user_core_backend
       - eurekaserver
+      - auth
   catalog_composite_backend:
     build: CatalogCmpApplication
     container_name: catalog_composite_backend

@@ -1,5 +1,9 @@
 package com.vslab.AuthorizationServer.config;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.vslab.AuthorizationServer.security.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +20,6 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -60,6 +61,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     protected AuthorizationCodeServices authorizationCodeServices() {
         return new InMemoryAuthorizationCodeServices();
+    }
+
+    @Bean
+    public JWKSet jwkSet() {
+        RSAKey.Builder builder = new RSAKey.Builder(KeyConfig.getVerifierKey())
+                .keyUse(KeyUse.SIGNATURE)
+                .algorithm(JWSAlgorithm.RS256)
+                .keyID(KeyConfig.VERIFIER_KEY_ID);
+        return new JWKSet(builder.build());
     }
 
 }
