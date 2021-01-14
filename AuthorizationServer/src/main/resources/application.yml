@@ -18,3 +18,8 @@ eureka:
     fetch-registry: true
     serviceUrl:
       defaultZone: http://eurekaserver:8761/eureka/
+security:
+  oauth2:
+    client:
+      client-id: webshop-client
+      client-secret: secretPassword

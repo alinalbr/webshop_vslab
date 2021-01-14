@@ -21,7 +21,7 @@ public class UserClient {
         @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
     public User getUser(Long userId) {
-        User tmpuser = restTemplate.getForObject("http://userCoreService:8081/user/" + userId, User.class);
+        User tmpuser = restTemplate.getForObject("http://userCoreService/user/" + userId, User.class);
         userCache.putIfAbsent(userId, tmpuser);
         return tmpuser;
     }
@@ -32,20 +32,20 @@ public class UserClient {
 
     //Create User
     public Void createUser(User user) {
-        return restTemplate.postForObject("http://userCoreService:8081/user", user, Void.class);
+        return restTemplate.postForObject("http://userCoreService/user", user, Void.class);
     }
 
     //Login User
     public Boolean loginUser(User user) {
         boolean response =
-                restTemplate.postForObject("http://userCoreService:8081/user/login", user, Boolean.class);
+                restTemplate.postForObject("http://userCoreService/user/login", user, Boolean.class);
         return response;
     }
 
     //Logout User
     public Boolean logoutUser(User user) {
         boolean response =
-                restTemplate.postForObject("http://userCoreService:8081/user/logout", user, Boolean.class);
+                restTemplate.postForObject("http://userCoreService/user/logout", user, Boolean.class);
         return response;
     }
 

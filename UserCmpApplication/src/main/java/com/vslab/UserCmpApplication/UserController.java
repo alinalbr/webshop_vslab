@@ -22,16 +22,30 @@ public class UserController {
     //Create User
     @PostMapping("")
     public ResponseEntity<Void> createUser(@RequestBody User user) {
-        try {
-            userClient.createUser(user);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (HttpStatusCodeException tp) {
-            return new ResponseEntity<>(tp.getStatusCode());
+
+        boolean validToken = this.checkTokenOnAuthServer("abc");
+        if (validToken) {
+            try {
+                userClient.createUser(user);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            } catch (HttpStatusCodeException tp) {
+                return new ResponseEntity<>(tp.getStatusCode());
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
+    public boolean checkTokenOnAuthServer(String token) {
+        // anfrage an auth
+        //  wenn valide
+        return true;
+        // wenn nicht valide
+        // return false;
+    }
+
     //Get user
-    @GetMapping("/{userId}")
+    /*@GetMapping("/{userId}")
     public ResponseEntity<User> getUser(@PathVariable Long userId) {
         if (userId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,7 +62,7 @@ public class UserController {
             return new ResponseEntity<>(new User(), tp.getStatusCode());
         }
 
-    }
+    }*/
 
     //Login user
     @PostMapping("/login")

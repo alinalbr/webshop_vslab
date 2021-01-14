@@ -20,9 +20,19 @@ public class UserController {
     @Autowired
     private UserRepository repo;
 
-    @GetMapping("/{userId}")
+    /*@GetMapping("/{userId}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable Long userId) {
         Optional<User> user = repo.findById(userId);
+        if ( user.isPresent() ) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }*/
+
+    @GetMapping("/{userName}")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable String userName) {
+        System.out.println("Es ging eine Anfrage ein");
+        Optional<User> user = repo.findByUsername(userName);
         if ( user.isPresent() ) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
@@ -58,11 +68,8 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user){
+    public ResponseEntity<Boolean> logoutWithUser(@RequestBody User user) {
         boolean userLoggedOut = true;
         return new ResponseEntity<>(userLoggedOut, HttpStatus.OK);
     }
-
-
-
 }

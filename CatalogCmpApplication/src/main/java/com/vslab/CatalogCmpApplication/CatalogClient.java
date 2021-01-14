@@ -25,7 +25,7 @@ public class CatalogClient {
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
     public Product getProduct(Long productId) {
-        Product tmpproduct = restTemplate.getForObject("http://productCoreService:8080/product/" + productId, Product.class);
+        Product tmpproduct = restTemplate.getForObject("http://productCoreService/product/" + productId, Product.class);
         Category category = getCategory(tmpproduct.getCategoryId());
         if (!category.isEmptyObject()) {
             tmpproduct.setCategoryName(category.getName());
@@ -37,7 +37,7 @@ public class CatalogClient {
 
     public Void addProduct(Product product) {
         productCache.put(product.getId(), product);
-        return restTemplate.postForObject("http://productCoreService:8080/product", product, Void.class);
+        return restTemplate.postForObject("http://productCoreService/product", product, Void.class);
     }
 
     @HystrixCommand(fallbackMethod = "getAllProductCache", commandProperties = {
@@ -46,7 +46,8 @@ public class CatalogClient {
     public Product[] getProducts(String searchValue, Double maxPreis, Double minPreis) {
         Product[] products;
         try {
-            ResponseEntity<Product[]> response = restTemplate.getForEntity("http://productCoreService:8080/product" +
+            // TODO: Ports raus nehmen
+            ResponseEntity<Product[]> response = restTemplate.getForEntity("http://productCoreService/product" +
                             ((searchValue != null || maxPreis != null || minPreis != null) ? "?": "") +
                             (searchValue != null ? ("searchValue=" + searchValue + "&") : "") +
                             (maxPreis != null ? ("maxPreis=" + maxPreis + "&") : "") +
@@ -77,7 +78,7 @@ public class CatalogClient {
 
     public boolean deleteProduct(Long productId) {
         try {
-            restTemplate.delete("http://productCoreService:8080/product/" + productId);
+            restTemplate.delete("http://productCoreService/product/" + productId);
             productCache.remove(productId);
             return true;
         } catch (HttpStatusCodeException error) {
@@ -89,7 +90,7 @@ public class CatalogClient {
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
     public Category getCategory(Long categoryId) {
-        Category cat = restTemplate.getForObject("http://categoryCoreService:8082/category/" + categoryId, Category.class);
+        Category cat = restTemplate.getForObject("http://categoryCoreService/category/" + categoryId, Category.class);
         return cat;
     }
 
@@ -99,7 +100,7 @@ public class CatalogClient {
     public Category[] getCategories() {
         Category[] categories;
         try {
-            ResponseEntity<Category[]> response = restTemplate.getForEntity("http://categoryCoreService:8082/category", Category[].class);
+            ResponseEntity<Category[]> response = restTemplate.getForEntity("http://categoryCoreService/category", Category[].class);
             categories = response.getBody();
 
             categoryCache.clear();
@@ -115,14 +116,14 @@ public class CatalogClient {
 
     public Category addCategory(Category category) {
         categoryCache.put(category.getId(), category);
-        Category tmpcategory = restTemplate.postForObject("http://categoryCoreService:8082/category", category, Category.class);
+        Category tmpcategory = restTemplate.postForObject("http://categoryCoreService/category", category, Category.class);
         return tmpcategory;
     }
 
     public boolean deleteCategory(Long categoryId) {
         try {
-            restTemplate.delete("http://categoryCoreService:8082/category/" + categoryId);
-            restTemplate.delete("http://productCoreService:8080/product/category/" + categoryId);
+            restTemplate.delete("http://categoryCoreService/category/" + categoryId);
+            restTemplate.delete("http://productCoreService/product/category/" + categoryId);
             categoryCache.remove(categoryId);
             return true;
         } catch (HttpStatusCodeException error) {
