@@ -22,26 +22,12 @@ public class UserController {
     //Create User
     @PostMapping("")
     public ResponseEntity<Void> createUser(@RequestBody User user) {
-
-        boolean validToken = this.checkTokenOnAuthServer("abc");
-        if (validToken) {
-            try {
-                userClient.createUser(user);
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            } catch (HttpStatusCodeException tp) {
-                return new ResponseEntity<>(tp.getStatusCode());
-            }
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        try {
+            userClient.createUser(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (HttpStatusCodeException tp) {
+            return new ResponseEntity<>(tp.getStatusCode());
         }
-    }
-
-    public boolean checkTokenOnAuthServer(String token) {
-        // anfrage an auth
-        //  wenn valide
-        return true;
-        // wenn nicht valide
-        // return false;
     }
 
     //Get user

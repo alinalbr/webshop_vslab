@@ -37,16 +37,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 .tokenStore(tokenStore())
                 .userDetailsService(userDetailsService);
-        /*endpoints
-                .authenticationManager(this.authenticationManager)
-                .tokenStore(tokenStore())
-                .userApprovalHandler(userApprovalHandler())
-                .accessTokenConverter(accessTokenConverter());*/
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        // configure security for /oauth/check_token and /oauth/token_key endpoint
         security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
@@ -65,85 +59,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     protected AuthorizationCodeServices authorizationCodeServices() {
-        // creates authorization codes, stores the codes in memory.
         return new InMemoryAuthorizationCodeServices();
     }
 
-
-
-  /*
-
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // @formatter:off
-        clients.inMemory()
-                .withClient("webshop-client")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "client_credentials", "password")
-                .scopes("message.read", "message.write")
-                .secret("{noop}secret")
-                .redirectUris("http://localhost:8080/client/authorized");
-        // @formatter:on
-    }
-
-    @Bean
-    public UserApprovalHandler userApprovalHandler() {
-        ApprovalStoreUserApprovalHandler userApprovalHandler = new ApprovalStoreUserApprovalHandler();
-        userApprovalHandler.setApprovalStore(approvalStore());
-        userApprovalHandler.setClientDetailsService(this.clientDetailsService);
-        userApprovalHandler.setRequestFactory(new DefaultOAuth2RequestFactory(this.clientDetailsService));
-        return userApprovalHandler;
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        JwtTokenStore tokenStore = new JwtTokenStore(accessTokenConverter());
-        tokenStore.setApprovalStore(approvalStore());
-        return tokenStore;
-    }
-
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        final RsaSigner signer = new RsaSigner(KeyConfig.getSignerKey());
-
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter() {
-            private JsonParser objectMapper = JsonParserFactory.create();
-
-            @Override
-            protected String encode(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-                String content;
-                try {
-                    content = this.objectMapper.formatMap(getAccessTokenConverter().convertAccessToken(accessToken, authentication));
-                } catch (Exception ex) {
-                    throw new IllegalStateException("Cannot convert access token to JSON", ex);
-                }
-                Map<String, String> headers = new HashMap<>();
-                headers.put("kid", KeyConfig.VERIFIER_KEY_ID);
-                String token = JwtHelper.encode(content, signer, headers).getEncoded();
-                return token;
-            }
-        };
-        converter.setSigner(signer);
-        converter.setVerifier(new RsaVerifier(KeyConfig.getVerifierKey()));
-        return converter;
-    }
-
-    @Bean
-    public ApprovalStore approvalStore() {
-        return new InMemoryApprovalStore();
-    }
-
-    @Bean
-    public JWKSet jwkSet() {
-        RSAKey.Builder builder = new RSAKey.Builder(KeyConfig.getVerifierKey())
-                .keyUse(KeyUse.SIGNATURE)
-                .algorithm(JWSAlgorithm.RS256)
-                .keyID(KeyConfig.VERIFIER_KEY_ID);
-        return new JWKSet(builder.build());
-    }*/
 }

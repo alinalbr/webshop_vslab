@@ -11,12 +11,6 @@ import java.security.Principal;
 
 @RestController
 public class JwkController {
-    @RequestMapping(value = "/current")
-    public Principal userInfo(@AuthenticationPrincipal Principal user) {
-        return user;
-    }
-
-    /**
     @Autowired
     private JWKSet jwkSet;
 
@@ -25,5 +19,10 @@ public class JwkController {
         System.out.println("------------getting oauth keys");
         return this.jwkSet.toString();
     }
-    */
+
+    @RequestMapping(value = "/current")
+    public Principal userInfo(@AuthenticationPrincipal Principal user) {
+        return user;
+    }
+
 }
