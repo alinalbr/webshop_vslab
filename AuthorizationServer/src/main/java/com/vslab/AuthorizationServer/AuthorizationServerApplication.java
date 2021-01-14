@@ -22,4 +22,9 @@ public class AuthorizationServerApplication {
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
+
+	@Bean
+	public UserDetailsService getUserDetailsService() {
+		return new UserDetailService();
+	}
 }

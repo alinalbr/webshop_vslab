@@ -5,6 +5,7 @@ server:
 spring:
   application:
     name: auth
+
   cloud:
     config:
       enable: false
