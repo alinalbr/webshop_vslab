@@ -47,7 +47,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // @formatter:off
         clients.inMemory()
-                .withClient("messaging-client")
+                .withClient("webshop-client")
                 .authorizedGrantTypes("authorization_code", "refresh_token", "client_credentials", "password")
                 .scopes("message.read", "message.write")
                 .secret("{noop}secret")

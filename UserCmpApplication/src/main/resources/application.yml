@@ -3,6 +3,11 @@ server:
 spring:
   application:
     name: userCompositeService
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth/auth/realms/baeldung
 eureka:
   client:
     serviceUrl:

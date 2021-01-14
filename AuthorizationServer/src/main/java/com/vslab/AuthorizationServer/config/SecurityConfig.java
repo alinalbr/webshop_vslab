@@ -1,5 +1,6 @@
 package com.vslab.AuthorizationServer.config;
 
+import com.vslab.AuthorizationServer.security.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -23,16 +24,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/oauth2/keys").permitAll()
+                .antMatchers(HttpMethod.GET, "/oauth2/keys")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin();
+                .httpBasic();
     }
     // @formatter:on
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
+    }
+
+    @Bean
+    public UserDetailsService getUserDetailsService() {
+        return new UserDetailService();
     }
 
     /*@Bean
