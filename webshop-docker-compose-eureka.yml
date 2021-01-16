@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  eurekaserver:
+    build: eurekaServer
+    container_name: eurekaserver
+    ports:
+      - 8761:8761
+    volumes:
+      - ./eurekaServer:/EurekaServerApplication

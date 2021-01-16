@@ -25,6 +25,10 @@ zuul:
     userCompositeService:
       path: /user/**
       stripPrefix: false
+    duckduck:
+      path: /duckduckgo/**
+      url: https://duckduckgo.com
+      stripPrefix: false
     catalogCategory:
       path: /category/**
       serviceId: catalogCompositeService
@@ -40,13 +44,12 @@ zuul:
       stripPrefix: false
 security:
   oauth2:
+    resource:
+      filter-order: 3
+      token-info-uri: http://auth/auth/oauth/check_token
+      jwk:
+        key-set-uri: http://auth/auth/oauth2/keys
     client:
-      access-token-uri: http://auth/auth/oauth/token
-      user-authorization-uri: http://auth/auth/oauth/authorize
       client-id: webshop-client
       client-secret: secretPassword
-    resource:
-      user-info-uri: http://auth/auth/current
-      prefer-token-info: false
-      jwt:
-        key-uri: http://auth/auth/oauth2/keys
+      grant-type: client_credentials

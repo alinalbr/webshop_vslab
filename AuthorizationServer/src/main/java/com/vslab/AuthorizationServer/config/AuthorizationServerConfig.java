@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -38,6 +39,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authorizationCodeServices(authorizationCodeServices())
                 .authenticationManager(authenticationManager)
                 .tokenStore(tokenStore())
+                .accessTokenConverter(jwtAccessTokenConverter())
                 .userDetailsService(userDetailsService);
     }
 
@@ -52,6 +54,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         filter.setAuthenticationManager(authenticationManager);
         filter.setAllowOnlyPost(true);
         return filter;
+    }
+
+    @Bean
+    JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey( KeyConfig.getSignerKey().toString() );
+        return converter;
     }
 
     @Override

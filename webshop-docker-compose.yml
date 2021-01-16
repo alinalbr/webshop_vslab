@@ -30,7 +30,7 @@ services:
       - ./ProductCoreApplication:/ProductCoreApplication
     depends_on:
       - products_core_database
-      - eurekaserver
+      #- eurekaserver
   user_core_database:
     image: mysql
     container_name: user_core_database
@@ -53,7 +53,7 @@ services:
       - 8081:8081
     depends_on:
       - user_core_database
-      - eurekaserver
+      #- eurekaserver
   category_core_database:
     image: mysql
     container_name: category_core_database
@@ -74,7 +74,7 @@ services:
       - 8082:8082
     depends_on:
       - category_core_database
-      - eurekaserver
+      #- eurekaserver
   user_composite_backend:
     build: UserCmpApplication
     container_name: user_composite_backend
@@ -83,7 +83,7 @@ services:
     depends_on:
       - user_core_database
       - user_core_backend
-      - eurekaserver
+      #- eurekaserver
       #- auth
   catalog_composite_backend:
     build: CatalogCmpApplication
@@ -95,23 +95,23 @@ services:
       - products_core_backend
       - category_core_database
       - category_core_backend
-      - eurekaserver
+      #- eurekaserver
   zuulserver:
     build: zuul
     container_name: zuulserver
     ports:
       - 8085:8085
     depends_on:
-      - eurekaserver
+      #- eurekaserver
       - user_composite_backend
       - catalog_composite_backend
-  #auth:
-  #  build: AuthorizationServer
-  #  container_name: auth
-  #  ports:
-  #    - 8086:8086
-  #  depends_on:
-  #    - eurekaserver
+  auth:
+    build: AuthorizationServer
+    container_name: auth
+    ports:
+      - 8086:8086
+    depends_on:
+      - eurekaserver
 volumes:
   products_database_data:
   user_core_database_data:
