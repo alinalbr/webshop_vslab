@@ -6,7 +6,10 @@ spring:
   security:
     oauth2:
       resource:
+        filter-order: 3
         token-info-uri: http://auth/auth/oauth/check_token
+        jwk:
+          key-set-uri: http://auth/auth/oauth2/keys
       client:
         client-id: webshop-client
         client-secret: secretPassword

@@ -1,5 +1,9 @@
 package com.vslab.AuthorizationServer.config;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.vslab.AuthorizationServer.security.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,6 +60,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("webshop-client").secret("{noop}secretPassword")
                 .authorizedGrantTypes("authorization_code", "refresh_token", "password", "client_credentials")
                 .scopes("read", "write")
+                .redirectUris("http://auth/auth/login")
                 .accessTokenValiditySeconds(120);
     }
 
@@ -69,4 +74,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new InMemoryAuthorizationCodeServices();
     }
 
+    @Bean
+    public JWKSet jwkSet() {
+        RSAKey.Builder builder = new RSAKey.Builder(KeyConfig.getVerifierKey())
+                .keyUse(KeyUse.SIGNATURE)
+                .algorithm(JWSAlgorithm.RS256)
+                .keyID(KeyConfig.VERIFIER_KEY_ID);
+        return new JWKSet(builder.build());
+    }
 }

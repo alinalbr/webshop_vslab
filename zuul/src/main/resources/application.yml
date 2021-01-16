@@ -33,3 +33,20 @@ zuul:
       path: /product/**
       serviceId: catalogCompositeService
       stripPrefix: false
+    auth:
+      sensitiveHeaders:
+        serviceId: eureka-client
+      path: /auth/**
+      stripPrefix: false
+security:
+  oauth2:
+    client:
+      access-token-uri: http://auth/auth/oauth/token
+      user-authorization-uri: http://auth/auth/oauth/authorize
+      client-id: webshop-client
+      client-secret: secretPassword
+    resource:
+      user-info-uri: http://auth/auth/current
+      prefer-token-info: false
+      jwt:
+        key-uri: http://auth/auth/oauth2/keys

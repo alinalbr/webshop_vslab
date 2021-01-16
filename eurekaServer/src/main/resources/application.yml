@@ -7,3 +7,10 @@ eureka:
     fetchRegistry: false
   server:
     waitTimeInMsSyncEmpty: 0
+
+security:
+  oauth2:
+    resource:
+      id: eureka-client
+      jwt:
+        key-uri: http://auth/auth/oauth2/keys

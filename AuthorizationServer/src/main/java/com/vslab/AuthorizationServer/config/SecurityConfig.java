@@ -28,13 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                     .authorizeRequests()
-                    .antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
+                    .antMatchers("/login", "/oauth2/keys")
                     .permitAll()
                 .and()
                    .authorizeRequests().anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .permitAll();
+                    .formLogin();
     }
 
     @Bean

@@ -3,6 +3,8 @@ package com.vslab.UserCmpApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -51,7 +53,9 @@ public class UserController {
     }*/
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username) {
+    public ResponseEntity<User> getUser(@PathVariable String username, @AuthenticationPrincipal Jwt jwt) {
+        String test = jwt.getClaims();
+        System.out.println("===============================" + test);
         if (username == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -72,7 +76,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Boolean> loginUser(@RequestBody User user) {
         ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(userClient.loginUser(user), HttpStatus.OK);
-        System.out.println("Hallo vom Resource Server");
 
         if (responseEntity == null) {
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
