@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component
 public class UserClient {
-    private final Map<Long, User> userCache = new LinkedHashMap<Long, User>();
+    private final Map<String, User> userCache = new LinkedHashMap<String, User>();
 
     @Autowired
     private RestTemplate restTemplate;
@@ -20,14 +20,14 @@ public class UserClient {
     @HystrixCommand(fallbackMethod = "getUserCache", commandProperties = {
         @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2")
     })
-    public User getUser(Long userId) {
-        User tmpuser = restTemplate.getForObject("http://userCoreService/user/" + userId, User.class);
-        userCache.putIfAbsent(userId, tmpuser);
+    public User getUser(String username) {
+        User tmpuser = restTemplate.getForObject("http://userCoreService/user/" + username, User.class);
+        userCache.putIfAbsent(username, tmpuser);
         return tmpuser;
     }
 
-    public User getUserCache(Long userId) {
-        return userCache.getOrDefault(userId, new User());
+    public User getUserCache(String username) {
+        return userCache.getOrDefault(username, new User());
     }
 
     //Create User

@@ -5,9 +5,12 @@ spring:
     name: userCompositeService
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://auth/auth/oauth2/keys
+      resource:
+        token-info-uri: http://auth/auth/oauth/check_token
+      client:
+        client-id: webshop-client
+        client-secret: secretPassword
+        grant-type: client_credentials
 eureka:
   client:
     serviceUrl:

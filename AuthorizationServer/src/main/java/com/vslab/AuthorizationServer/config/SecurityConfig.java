@@ -11,12 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-/**
- * @author Joe Grandja
- */
 @EnableWebSecurity
 @Configuration
-@Order(-20)
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -29,12 +26,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatchers()
-                    .antMatchers("/login", "/oauth2/keys", "/oauth/authorize", "/oauth/confirm_access")
+                .antMatcher("/**")
+                    .authorizeRequests()
+                    .antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
+                    .permitAll()
                 .and()
-                    .formLogin().loginPage("/login").permitAll().failureUrl("/login?error")
+                   .authorizeRequests().anyRequest().authenticated()
                 .and()
-                    .authorizeRequests().anyRequest().authenticated();
+                    .formLogin()
+                    .permitAll();
     }
 
     @Bean

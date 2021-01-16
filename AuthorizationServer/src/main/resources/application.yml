@@ -5,7 +5,6 @@ server:
 spring:
   application:
     name: auth
-
   cloud:
     config:
       enable: false
@@ -24,3 +23,6 @@ security:
     client:
       client-id: webshop-client
       client-secret: secretPassword
+      client-scope: read,write
+    authorization:
+      check-token-access: permitAll()

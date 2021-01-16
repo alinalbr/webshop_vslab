@@ -84,7 +84,7 @@ services:
       - user_core_database
       - user_core_backend
       - eurekaserver
-      - auth
+      #- auth
   catalog_composite_backend:
     build: CatalogCmpApplication
     container_name: catalog_composite_backend
@@ -105,13 +105,13 @@ services:
       - eurekaserver
       - user_composite_backend
       - catalog_composite_backend
-  auth:
-    build: AuthorizationServer
-    container_name: auth
-    ports:
-      - 8086:8086
-    depends_on:
-      - eurekaserver
+  #auth:
+  #  build: AuthorizationServer
+  #  container_name: auth
+  #  ports:
+  #    - 8086:8086
+  #  depends_on:
+  #    - eurekaserver
 volumes:
   products_database_data:
   user_core_database_data:

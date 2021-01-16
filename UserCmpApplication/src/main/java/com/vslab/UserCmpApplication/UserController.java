@@ -50,10 +50,29 @@ public class UserController {
 
     }*/
 
+    @GetMapping("/{username}")
+    public ResponseEntity<User> getUser(@PathVariable String username) {
+        if (username == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            User user = userClient.getUser(username);
+            if (!user.isEmptyObject()) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+            }
+        } catch (HttpStatusCodeException tp) {
+            return new ResponseEntity<>(new User(), tp.getStatusCode());
+        }
+    }
+
     //Login user
     @PostMapping("/login")
     public ResponseEntity<Boolean> loginUser(@RequestBody User user) {
         ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(userClient.loginUser(user), HttpStatus.OK);
+        System.out.println("Hallo vom Resource Server");
 
         if (responseEntity == null) {
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
