@@ -17,6 +17,7 @@ eureka:
     serviceUrl:
       defaultZone: http://eurekaserver:8761/eureka/
 zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
   host:
     socket-timeout-millis: 20000
     connect-timeout-millis: 20000
@@ -44,12 +45,10 @@ zuul:
       stripPrefix: false
 security:
   oauth2:
-    resource:
-      filter-order: 3
-      token-info-uri: http://auth/auth/oauth/check_token
-      jwk:
-        key-set-uri: http://auth/auth/oauth2/keys
     client:
-      client-id: webshop-client
-      client-secret: secretPassword
-      grant-type: client_credentials
+      client-id: zuul-client
+      client-secret: zuulsSavePassword
+    resource:
+      #token-info-uri: http://auth:8086/auth/oauth/check_token
+      token-info-uri: http://auth:8086/auth/ninchen
+      prefer-token-info: true

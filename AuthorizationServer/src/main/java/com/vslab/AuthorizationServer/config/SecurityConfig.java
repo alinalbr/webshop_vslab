@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,14 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .antMatcher("/**")
-                    .authorizeRequests()
-                    .antMatchers("/login", "/oauth2/keys")
-                    .permitAll()
+                .csrf().disable()
+                // .anonymous().disable()
+                .authorizeRequests()
+                .antMatchers("/auth", "/auth/**", "/oauth/**", "/oauth/check_token", "/ninchen", "/auth/ninchen**", "/ninchen**", "ninchen", "/ninchen/")
+                .permitAll()
                 .and()
-                   .authorizeRequests().anyRequest().authenticated()
-                .and()
-                    .formLogin();
+                .formLogin();
     }
 
     @Bean

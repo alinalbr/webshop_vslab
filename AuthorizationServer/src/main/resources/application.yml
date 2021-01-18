@@ -20,9 +20,10 @@ eureka:
       defaultZone: http://eurekaserver:8761/eureka/
 security:
   oauth2:
-    client:
-      client-id: webshop-client
-      client-secret: secretPassword
-      client-scope: read,write
-    authorization:
-      check-token-access: permitAll()
+    resource:
+      filter-order: 3
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

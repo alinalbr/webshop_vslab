@@ -1,6 +1,6 @@
 package com.vslab.AuthorizationServer.config;
 
-import org.springframework.core.io.ClassPathResource;
+/*import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -32,4 +32,4 @@ class KeyConfig {
     private static KeyPair getKeyPair() {
         return KEY_STORE_KEY_FACTORY.getKeyPair(KEY_ALIAS);
     }
-}
+}*/
