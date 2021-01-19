@@ -3,11 +3,7 @@ server:
 spring:
   application:
     name: userCompositeService
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://auth/auth/oauth2/keys
+
 eureka:
   client:
     serviceUrl:

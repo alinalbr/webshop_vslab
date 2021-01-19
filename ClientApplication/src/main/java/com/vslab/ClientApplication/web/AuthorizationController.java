@@ -1,5 +1,6 @@
 package com.vslab.ClientApplication.web;
 
+import com.vslab.ClientApplication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +31,6 @@ public class AuthorizationController {
         passwordResourceDetails.setUsername(request.getParameter("username"));
         passwordResourceDetails.setPassword(request.getParameter("password"));
 
-        Boolean login = this.webshopClientPasswordRestTemplate.postForObject(this.resourceBaseUri + "/user/login", passwordResourceDetails, Boolean.class);
-        model.addAttribute("eingeloggt", login);
-
         // Never store the user's credentials
         passwordResourceDetails.setUsername(null);
         passwordResourceDetails.setPassword(null);
@@ -40,6 +38,8 @@ public class AuthorizationController {
         OAuth2AccessToken accessToken = this.webshopClientPasswordRestTemplate.getAccessToken();
         if (accessToken != null) {
             System.out.println("--------   accesstoken  " + accessToken);
+            User user = this.webshopClientPasswordRestTemplate.getForObject(this.resourceBaseUri + "/user/" + passwordResourceDetails.getUsername(), User.class);
+            model.addAttribute("eingeloggt", user.getFirstname());
         }
         else System.out.println("--------   access token = null");
 

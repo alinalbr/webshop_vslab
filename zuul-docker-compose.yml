@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  zuulserver:
+    build: zuul
+    container_name: zuulserver
+    ports:
+      - 8085:8085

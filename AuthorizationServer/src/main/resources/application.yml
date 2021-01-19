@@ -10,17 +10,11 @@ spring:
     config:
       enable: false
 eureka:
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-    statusPageUrlPath: /info
-    healthCheckUrlPath: /health
   client:
-    register-with-eureka: true
-    fetch-registry: true
     serviceUrl:
       defaultZone: http://eurekaserver:8761/eureka/
-security:
-  oauth2:
-    client:
-      client-id: webshop-client
-      client-secret: secretPassword
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 5
+    metadataMap:
+      instanceId: "${spring.application.name}:${random.value}"

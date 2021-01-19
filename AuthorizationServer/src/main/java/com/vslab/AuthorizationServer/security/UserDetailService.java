@@ -39,7 +39,7 @@ public class UserDetailService implements UserDetailsService {
         }
 
         User user = response.getBody();
-        System.out.println("HAAAAAAAAAAAAAAAAAAAAAALLOOOOOOOOOOOOOOOOOO " + user);
+        
         if (user == null) {
             throw new UsernameNotFoundException("Retrieved user is null.");
         }
