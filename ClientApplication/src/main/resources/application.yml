@@ -1,0 +1,37 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /client
+
+spring:
+  application:
+    name: client
+  thymeleaf:
+    cache: false
+
+security:
+  oauth2:
+    client:
+      webshop-client-auth-code:
+        client-id: webshop-client
+        client-secret: secretPassword
+        grant-type: authorization_code
+        user-authorization-uri: http://localhost:8086/auth/oauth/authorize
+        access-token-uri: http://localhost:8086/auth/oauth/token
+        scope: read, write
+        pre-established-redirect-uri: http://localhost:8090/client/authorized
+        use-current-uri: false
+      webshop-client-client-creds:
+        client-id: webshop-client
+        client-secret: secretPassword
+        grant-type: client_credentials
+        access-token-uri: http://localhost:8086/auth/oauth/token
+        scope: read, write
+      webshop-client-password:
+        client-id: webshop-client
+        client-secret: secretPassword
+        grant-type: password
+        access-token-uri: http://localhost:8086/auth/oauth/token
+        scope: read, write
+webshop:
+  base-uri: http://localhost:8085
