@@ -27,13 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .antMatcher("/auth/**")
                 .csrf().disable()
-                // .anonymous().disable()
                 .authorizeRequests()
-                .antMatchers("/auth", "/auth/**", "/oauth/**", "/oauth/check_token", "/ninchen", "/auth/ninchen**", "/ninchen**", "ninchen", "/ninchen/")
-                .permitAll()
+                    .anyRequest()
+                    .authenticated()
                 .and()
-                .formLogin();
+                    .formLogin();
     }
 
     @Bean

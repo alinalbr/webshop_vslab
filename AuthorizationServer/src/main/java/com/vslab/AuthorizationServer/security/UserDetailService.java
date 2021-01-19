@@ -15,9 +15,6 @@ public class UserDetailService implements UserDetailsService {
     @Autowired
     private RestTemplate restTemplate;
 
-    //@Autowired
-    //private PasswordEncoder encoder;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username == null) {
@@ -39,7 +36,7 @@ public class UserDetailService implements UserDetailsService {
         }
 
         User user = response.getBody();
-        System.out.println("HAAAAAAAAAAAAAAAAAAAAAALLOOOOOOOOOOOOOOOOOO " + user);
+
         if (user == null) {
             throw new UsernameNotFoundException("Retrieved user is null.");
         }

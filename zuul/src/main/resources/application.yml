@@ -46,9 +46,8 @@ zuul:
 security:
   oauth2:
     client:
-      client-id: zuul-client
-      client-secret: zuulsSavePassword
+      client-id: webshop-client
+      client-secret: secretPassword
     resource:
-      #token-info-uri: http://auth:8086/auth/oauth/check_token
-      token-info-uri: http://auth:8086/auth/ninchen
+      token-info-uri: http://auth:8086/auth/oauth/authorize
       prefer-token-info: true
