@@ -26,6 +26,7 @@ public class AuthorizationController {
 
     @PostMapping(value = "/authorize")
     public String password_grant(Model model, HttpServletRequest request) {
+        System.out.println("Hallo aus authorize");
         ResourceOwnerPasswordResourceDetails passwordResourceDetails =
                 (ResourceOwnerPasswordResourceDetails) this.webshopClientPasswordRestTemplate.getResource();
         passwordResourceDetails.setUsername(request.getParameter("username"));
