@@ -24,17 +24,13 @@ public class AuthorizationController {
     @Qualifier("webshopClientPasswordRestTemplate")
     private OAuth2RestTemplate webshopClientPasswordRestTemplate;
 
-    @PostMapping(value = "/authorize")
+    @PostMapping("/authorize")
     public String password_grant(Model model, HttpServletRequest request) {
         System.out.println("Hallo aus authorize");
         ResourceOwnerPasswordResourceDetails passwordResourceDetails =
                 (ResourceOwnerPasswordResourceDetails) this.webshopClientPasswordRestTemplate.getResource();
         passwordResourceDetails.setUsername(request.getParameter("username"));
         passwordResourceDetails.setPassword(request.getParameter("password"));
-
-        // Never store the user's credentials
-        passwordResourceDetails.setUsername(null);
-        passwordResourceDetails.setPassword(null);
 
         OAuth2AccessToken accessToken = this.webshopClientPasswordRestTemplate.getAccessToken();
         if (accessToken != null) {
@@ -43,6 +39,10 @@ public class AuthorizationController {
             model.addAttribute("eingeloggt", user.getFirstname());
         }
         else System.out.println("--------   access token = null");
+
+        // Never store the user's credentials
+        passwordResourceDetails.setUsername(null);
+        passwordResourceDetails.setPassword(null);
 
         return "index";
     }

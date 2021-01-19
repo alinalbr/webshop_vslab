@@ -13,15 +13,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @Configuration
 @EnableOAuth2Client
 public class OAuth2ClientConfig {
-    @ConfigurationProperties(prefix = "security.oauth2.client.webshop-client-password")
+
     @Bean
+    @ConfigurationProperties(prefix = "security.oauth2.client.webshop-client-password")
     public OAuth2ProtectedResourceDetails webshopClientPasswordDetails() {
         return new ResourceOwnerPasswordResourceDetails();
     }
 
     @Bean
     public OAuth2RestTemplate webshopClientPasswordRestTemplate(
-            @Qualifier("webshopClientPasswordDetails") OAuth2ProtectedResourceDetails resourceDetails) {
+            @Qualifier("webshopClientPasswordDetails") OAuth2ProtectedResourceDetails resourceDetails
+    ) {
         return new OAuth2RestTemplate(resourceDetails);
     }
 }
