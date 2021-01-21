@@ -5,13 +5,10 @@ import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
 import hska.iwi.eShopMaster.model.database.dataAccessObjects.ProductDAO;
 import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.Product;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 public class ProductManagerImpl implements ProductManager {
-	private final RestTemplate restTemplate = new RestTemplate();
-
 	private final ProductDAO helper;
 	
 	public ProductManagerImpl() {
@@ -24,9 +21,7 @@ public class ProductManagerImpl implements ProductManager {
 	
 	public List<Product> getProductsForSearchValues(String searchDescription,
 													Double searchMinPrice, Double searchMaxPrice) {
-		final Product[] results = this.restTemplate.getForObject("http://localhost:8090/product", Product[].class);
-
-		return Arrays.asList(results);
+		return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
 	}
 
 	public Product getProductById(int id) {

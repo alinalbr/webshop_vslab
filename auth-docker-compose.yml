@@ -6,3 +6,26 @@ services:
     container_name: auth
     ports:
       - 8086:8086
+  legacywebshop:
+    build:
+      context: ./hska-vis-legacy
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8888:8080"
+  web-shop-db-image:
+    build:
+      context: ./hska-vis-legacy
+      dockerfile: ./docker/DockerfileMySQL
+    volumes:
+      - "./hska-vis-legacy/.data/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
+      MYSQL_DATABASE: webshop
+      MYSQL_USER: webshopuser
+      MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
+    ports:
+      - "3309:3306"
+
+networks:
+  local_dev_net:
+    driver: bridge

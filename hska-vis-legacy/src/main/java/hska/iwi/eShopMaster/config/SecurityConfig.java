@@ -1,4 +1,4 @@
-/*package hska.iwi.eShopMaster.config;
+package hska.iwi.eShopMaster.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -30,4 +30,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/index");
     }
     // @formatter:on
-}*/
+}

@@ -5,7 +5,11 @@ import hska.iwi.eShopMaster.model.database.dataAccessObjects.RoleDAO;
 import hska.iwi.eShopMaster.model.database.dataAccessObjects.UserDAO;
 import hska.iwi.eShopMaster.model.database.dataobjects.Role;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 /**
  * 
@@ -13,7 +17,8 @@ import org.springframework.web.client.RestTemplate;
  */
 
 public class UserManagerImpl implements UserManager {
-	private RestTemplate restTemplate = new RestTemplate();
+	private OAuth2RestTemplate webshopAuthTemplate;
+
 	UserDAO helper;
 	
 	public UserManagerImpl() {
@@ -36,8 +41,18 @@ public class UserManagerImpl implements UserManager {
 		if (password == null || password.equals("")) {
 			return null;
 		}
-		String user = "{'username': '" + username + "', 'password': '" + password + "'}";
-		return this.restTemplate.postForObject("http://localhost:8086/auth/oauth/token", user, String.class);
+
+		ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+		resourceDetails.setUsername(username);
+		resourceDetails.setPassword(password);
+		resourceDetails.setAccessTokenUri("http://auth:8086/auth/oauth/token");
+		resourceDetails.setClientId("webshop-client");
+		resourceDetails.setClientSecret("secretPassword");
+		resourceDetails.setGrantType("password");
+		resourceDetails.setScope(Arrays.asList("read", "write"));
+		this.webshopAuthTemplate = new OAuth2RestTemplate(resourceDetails);
+
+		return this.webshopAuthTemplate.getAccessToken().toString();
 	}
 
 	public boolean deleteUserById(int id) {

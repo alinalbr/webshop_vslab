@@ -32,7 +32,6 @@ public class LoginAction extends ActionSupport {
 		UserManager myCManager = new UserManagerImpl();
 		
 		// Sende username und password an client
-		System.out.println("hahhahahha" + getUsername());
 		String token = myCManager.authorizeUser(getUsername(), getPassword());
 
 		// Does token exist?
