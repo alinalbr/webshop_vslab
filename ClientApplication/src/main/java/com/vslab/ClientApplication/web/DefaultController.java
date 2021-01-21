@@ -10,4 +10,9 @@ public class DefaultController {
     public String root() {
         return "index";
     }
+
+    @GetMapping("/start")
+    public String startPage() {
+        return "start";
+    }
 }

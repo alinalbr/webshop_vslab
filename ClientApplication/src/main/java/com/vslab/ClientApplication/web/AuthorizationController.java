@@ -1,5 +1,6 @@
 package com.vslab.ClientApplication.web;
 
+import com.vslab.ClientApplication.model.Product;
 import com.vslab.ClientApplication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,19 +25,26 @@ public class AuthorizationController {
     @Qualifier("webshopClientPasswordRestTemplate")
     private OAuth2RestTemplate webshopClientPasswordRestTemplate;
 
-    @PostMapping("/authorize")
+    @GetMapping("/authorized")
+    public String authorized(Model model) {
+
+        return "start";
+    }
+
+    @PostMapping(value = "/authorize", params = "grant_type=password")
     public String password_grant(Model model, HttpServletRequest request) {
-        System.out.println("Hallo aus authorize");
+        System.out.println("Hallo aus authorize " + this.webshopClientPasswordRestTemplate.getResource());
         ResourceOwnerPasswordResourceDetails passwordResourceDetails =
                 (ResourceOwnerPasswordResourceDetails) this.webshopClientPasswordRestTemplate.getResource();
         passwordResourceDetails.setUsername(request.getParameter("username"));
         passwordResourceDetails.setPassword(request.getParameter("password"));
 
+        Product[] products = this.webshopClientPasswordRestTemplate.getForObject(this.resourceBaseUri + "/product", Product[].class);
+        model.addAttribute("products", products);
+
         OAuth2AccessToken accessToken = this.webshopClientPasswordRestTemplate.getAccessToken();
         if (accessToken != null) {
             System.out.println("--------   accesstoken  " + accessToken);
-            User user = this.webshopClientPasswordRestTemplate.getForObject(this.resourceBaseUri + "/user/" + passwordResourceDetails.getUsername(), User.class);
-            model.addAttribute("eingeloggt", user.getFirstname());
         }
         else System.out.println("--------   access token = null");
 
@@ -44,6 +52,7 @@ public class AuthorizationController {
         passwordResourceDetails.setUsername(null);
         passwordResourceDetails.setPassword(null);
 
+        System.out.println("Bin am Ende");
         return "index";
     }
 }

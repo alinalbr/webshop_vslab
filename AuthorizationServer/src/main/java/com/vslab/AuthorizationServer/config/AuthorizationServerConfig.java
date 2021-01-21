@@ -72,7 +72,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory()
                 .withClient("webshop-client").secret("{noop}secretPassword")
                 .authorizedGrantTypes("authorization_code", "refresh_token", "client_credentials", "password")
-                .redirectUris("http://localhost:8090/client/authorized")
+                .redirectUris("http://client:8090/client/start")
                 .scopes("read", "write");
     }
 

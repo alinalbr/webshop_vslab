@@ -8,6 +8,15 @@ spring:
     name: client
   thymeleaf:
     cache: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 5
+    metadataMap:
+      instanceId: "${spring.application.name}:${random.value}"
 
 security:
   oauth2:
@@ -16,7 +25,7 @@ security:
         client-id: webshop-client
         client-secret: secretPassword
         grant-type: password
-        access-token-uri: http://localhost:8086/auth/oauth/token
+        access-token-uri: http://auth:8086/auth/oauth/token
         scope: read, write
 webshop:
-  base-uri: http://localhost:8085
+  base-uri: http://zuulserver:8085

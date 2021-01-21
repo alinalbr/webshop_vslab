@@ -52,13 +52,21 @@
                                 <input type="password" id="password" name="password" class="form-control input-sm">
                             </div>
                         </div>
+                        <input type="hidden" id="grant_type" name="grant_type" value="password">
                         <button type="submit" class="btn btn-primary btn-sm">Login</button>
                     </form>
                 </div>
             </li>
         </ul>
-        <div th:if="${eingeloggt}" class="panel-footer">
-            Hallo Ninchen
+        <div th:if="${products}" class="panel-footer">
+            <h4>Produkte:</h4>
+            <table class="table table-condensed">
+                <tbody>
+                <tr class="row" th:each="product : ${products}">
+                    <td th:text="${product}">product</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
