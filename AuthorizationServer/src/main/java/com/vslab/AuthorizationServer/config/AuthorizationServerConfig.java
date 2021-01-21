@@ -71,8 +71,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("webshop-client").secret("{noop}secretPassword")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "client_credentials", "password")
-                .redirectUris("http://client:8090/client/start")
+                .authorizedGrantTypes("refresh_token", "client_credentials", "password")
                 .scopes("read", "write");
     }
 
