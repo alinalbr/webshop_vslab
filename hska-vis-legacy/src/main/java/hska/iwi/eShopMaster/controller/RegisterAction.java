@@ -32,23 +32,20 @@ public class RegisterAction extends ActionSupport {
 
    		this.role = 2L; // 1 -> admin, 2-> user
 
-   		if (!userManager.doesUserAlreadyExist(this.username)) {
-    		    	
-	        // save it to database
-	        userManager.registerUser(this.username, this.firstname, this.lastname, this.password1, this.role);
-	            // User has been saved successfully to databse:
-	        	addActionMessage("user registered, please login");
-	        	addActionError("user registered, please login");
-				Map<String, Object> session = ActionContext.getContext().getSession();
-				session.put("message", "user registered, please login");
-	            result = "success";
-	        
-    	}
+        // save it to database
+        boolean success = userManager.registerUser(this.username, this.firstname, this.lastname, this.password1, this.role);
+        // User has been saved successfully to databse:
+        addActionMessage("user registered, please login");
+        addActionError("user registered, please login");
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        session.put("message", "user registered, please login");
+        if (success) {
+            result = "success";
+        }
     	else {
     		addActionError(getText("error.username.alreadyInUse"));
     	}
         return result;
-
     }
     
 	@Override

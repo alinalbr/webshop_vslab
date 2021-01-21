@@ -6,7 +6,7 @@ import org.springframework.http.HttpEntity;
 
 public interface UserManager {
     
-    public void registerUser(String username, String name, String lastname, String password, Long role);
+    public boolean registerUser(String username, String name, String lastname, String password, Long role);
     
     public String authorizeUser(String username, String password);
 

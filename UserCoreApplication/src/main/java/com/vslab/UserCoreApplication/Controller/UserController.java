@@ -31,7 +31,6 @@ public class UserController {
 
     @GetMapping("/{userName}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable String userName) {
-        System.out.println("Es ging eine Anfrage ein");
         Optional<User> user = repo.findByUsername(userName);
         if ( user.isPresent() ) {
             return new ResponseEntity<>(user, HttpStatus.OK);

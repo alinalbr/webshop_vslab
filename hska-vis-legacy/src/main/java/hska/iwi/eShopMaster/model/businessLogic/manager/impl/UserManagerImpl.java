@@ -21,13 +21,6 @@ public class UserManagerImpl implements UserManager {
 	
 	public UserManagerImpl() {}
 
-	
-	public void registerUser(String username, String name, String lastname, String password, Long role) {
-		User user = new User(username, name, lastname, password, role);
-		this.webshopAuthTemplate.postForObject("http://localhost:8085/user", user, User.class);
-	}
-
-	
 	public String authorizeUser(String username, String password) {
 		if (username == null || username.equals("")) {
 			return null;
@@ -48,6 +41,15 @@ public class UserManagerImpl implements UserManager {
 
 		return this.webshopAuthTemplate.getAccessToken().toString();
 	}
+	
+	public boolean registerUser(String username, String name, String lastname, String password, Long role) {
+		User user = new User(name, lastname, username, password, role);
+		ResponseEntity<Void> response = this.restTemplate.postForEntity("http://zuulserver:8085/user", user, Void.class);
+		if (response.getStatusCode() == HttpStatus.CREATED) {
+			return true;
+		}
+		return false;
+	}
 
 	public User getUserByUsername(String username) {
 		ResponseEntity<User> response = this.restTemplate.exchange("http://zuulserver:8085/user/" + username, HttpMethod.GET, getRequestEntity(), User.class);
@@ -59,19 +61,23 @@ public class UserManagerImpl implements UserManager {
 	}
 
 	public boolean deleteUserById(Long id) {
-		this.webshopAuthTemplate.delete("http://localhost:8085/user/" + id);
-		return true;
+		ResponseEntity<Boolean> response = this.restTemplate.exchange("http://zuulserver:8085/user/" + id, HttpMethod.DELETE, getRequestEntity(), Boolean.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getBody()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean doesUserAlreadyExist(String username) {
-    	User user = this.webshopAuthTemplate.getForObject("http://localhost:8085/user/" + username, User.class);
-    	
-    	if (user != null){
-    		return true;
-    	}
-    	else {
-    		return false;
-    	}
+    	ResponseEntity<User> response = this.restTemplate.exchange("http://zuulserver:8085/user/" + username, HttpMethod.GET, getRequestEntity(), User.class);
+    	if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getBody() != null){
+				return true;
+			}
+		}
+    	return false;
 	}
 	
 
