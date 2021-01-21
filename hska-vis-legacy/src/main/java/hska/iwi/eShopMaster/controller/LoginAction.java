@@ -2,12 +2,13 @@ package hska.iwi.eShopMaster.controller;
 
 import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.UserManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.model.User;
 
 import java.util.Map;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.http.HttpHeaders;
 
 public class LoginAction extends ActionSupport {
 
@@ -34,9 +35,14 @@ public class LoginAction extends ActionSupport {
 		// Sende username und password an client
 		String token = myCManager.authorizeUser(getUsername(), getPassword());
 
+		System.out.println("token: " + token);
 		// Does token exist?
 		if (token != null) {
 			session.put("webshop_jwt", token);
+
+			User user = myCManager.getUserByUsername(getUsername());
+			session.put("webshop_user", user);
+
 			result = "success";
 		}
 		else {
@@ -48,7 +54,6 @@ public class LoginAction extends ActionSupport {
 	
 	@Override
 	public void validate() {
-		System.out.println("asdf" + getUsername());
 		if (getUsername().length() == 0) {
 			addActionError(getText("error.username.required"));
 		}

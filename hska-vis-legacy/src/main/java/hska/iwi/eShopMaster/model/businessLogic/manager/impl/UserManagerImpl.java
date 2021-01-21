@@ -1,15 +1,14 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
+import com.opensymphony.xwork2.ActionContext;
 import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.RoleDAO;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.UserDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Role;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.model.User;
+import org.springframework.http.*;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 
@@ -18,19 +17,14 @@ import java.util.Arrays;
 
 public class UserManagerImpl implements UserManager {
 	private OAuth2RestTemplate webshopAuthTemplate;
-
-	UserDAO helper;
+	private RestTemplate restTemplate = new RestTemplate();
 	
-	public UserManagerImpl() {
-		helper = new UserDAO();
-	}
+	public UserManagerImpl() {}
 
 	
-	public void registerUser(String username, String name, String lastname, String password, Role role) {
-
+	public void registerUser(String username, String name, String lastname, String password, Long role) {
 		User user = new User(username, name, lastname, password, role);
-
-		helper.saveObject(user);
+		this.webshopAuthTemplate.postForObject("http://localhost:8085/user", user, User.class);
 	}
 
 	
@@ -55,37 +49,46 @@ public class UserManagerImpl implements UserManager {
 		return this.webshopAuthTemplate.getAccessToken().toString();
 	}
 
-	public boolean deleteUserById(int id) {
-		User user = new User();
-		user.setId(id);
-		helper.deleteObject(user);
+	public User getUserByUsername(String username) {
+		ResponseEntity<User> response = this.restTemplate.exchange("http://zuulserver:8085/user/" + username, HttpMethod.GET, getRequestEntity(), User.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return response.getBody();
+		} else {
+			return null;
+		}
+	}
+
+	public boolean deleteUserById(Long id) {
+		this.webshopAuthTemplate.delete("http://localhost:8085/user/" + id);
 		return true;
 	}
 
-	public Role getRoleByLevel(int level) {
-		RoleDAO roleHelper = new RoleDAO();
-		return roleHelper.getRoleByLevel(level);
-	}
-
 	public boolean doesUserAlreadyExist(String username) {
-		return false;
-/*    	User dbUser = this.getUserByUsername(username);
+    	User user = this.webshopAuthTemplate.getForObject("http://localhost:8085/user/" + username, User.class);
     	
-    	if (dbUser != null){
+    	if (user != null){
     		return true;
     	}
     	else {
     		return false;
-    	}*/
+    	}
 	}
 	
 
 	public boolean validate(User user) {
-		/*if (user.getFirstname().isEmpty() || user.getPassword().isEmpty() || user.getRole() == null || user.getLastname() == null || user.getUsername() == null) {
+		if (user.getFirstname() == null || user.getPassword() == null || user.getRole() == null || user.getLastname() == null || user.getUsername() == null) {
 			return false;
-		}*/
+		}
 		
 		return true;
+	}
+
+	public HttpEntity getRequestEntity() {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		System.out.println("session: " + session.get("webshop_jwt"));
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
+		return new HttpEntity<String>(headers);
 	}
 
 }

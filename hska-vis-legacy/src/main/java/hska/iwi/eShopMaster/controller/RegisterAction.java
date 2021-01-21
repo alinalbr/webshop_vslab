@@ -2,7 +2,6 @@ package hska.iwi.eShopMaster.controller;
 
 import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.UserManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Role;
 
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public class RegisterAction extends ActionSupport {
     private String firstname;
     private String lastname;
     
-    private Role role = null;
+    private Long role = null;
     
     @Override
     public String execute() throws Exception {
@@ -31,7 +30,7 @@ public class RegisterAction extends ActionSupport {
 
         UserManager userManager = new UserManagerImpl();
 
-   		this.role = userManager.getRoleByLevel(1); // 1 -> regular User, 2-> Admin
+   		this.role = 2L; // 1 -> admin, 2-> user
 
    		if (!userManager.doesUserAlreadyExist(this.username)) {
     		    	
@@ -115,11 +114,11 @@ public class RegisterAction extends ActionSupport {
         this.password2 = password;
     }
     
-    public Role getRole() {
+    public Long getRole() {
         return (this.role);
     }
     
-    public void setRole(Role role) {
+    public void setRole(Long role) {
         this.role = role;
     }
 
