@@ -1,45 +1,72 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
 
+import com.opensymphony.xwork2.ActionContext;
 import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.CategoryDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import hska.iwi.eShopMaster.model.Category;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-public class CategoryManagerImpl implements CategoryManager{
-	private CategoryDAO helper;
+public class CategoryManagerImpl implements CategoryManager {
+	private RestTemplate restTemplate = new RestTemplate();
 	
-	public CategoryManagerImpl() {
-		helper = new CategoryDAO();
-	}
+	public CategoryManagerImpl() {}
 
 	public List<Category> getCategories() {
-		return helper.getObjectList();
+		ResponseEntity<Category[]> response = this.restTemplate.exchange("http://zuulserver:8085/category", HttpMethod.GET, getRequestEntity(), Category[].class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return Arrays.asList(response.getBody());
+		} else {
+			return null;
+		}
 	}
 
 	public Category getCategory(int id) {
-		return helper.getObjectById(id);
+		ResponseEntity<Category> response = this.restTemplate.exchange("http://zuulserver:8085/category/" + id, HttpMethod.GET, getRequestEntity(), Category.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return response.getBody();
+		} else {
+			return null;
+		}
 	}
 
 	public Category getCategoryByName(String name) {
-		return helper.getObjectByName(name);
+		ResponseEntity<Category> response = this.restTemplate.exchange("http://zuulserver:8085/category/" + name, HttpMethod.GET, getRequestEntity(), Category.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return response.getBody();
+		} else {
+			return null;
+		}
 	}
 
 	public void addCategory(String name) {
 		Category cat = new Category(name);
-		helper.saveObject(cat);
-
+		ResponseEntity<Void> response = this.restTemplate.exchange("http://zuulserver:8085/category", HttpMethod.POST, getRequestEntityWithBody(cat), Void.class);
 	}
 
-	public void delCategory(Category cat) {
-	
-// 		Products are also deleted because of relation in Category.java 
-		helper.deleteById(cat.getId());
+	public void delCategory(Category cat) { // this method is not needed
+		ResponseEntity<Boolean> response = this.restTemplate.exchange("http://zuulserver:8085/category/" + cat.getId(), HttpMethod.DELETE, getRequestEntity(), Boolean.class);
 	}
 
 	public void delCategoryById(int id) {
-		
-		helper.deleteById(id);
+		ResponseEntity<Boolean> response = this.restTemplate.exchange("http://zuulserver:8085/category/" + id, HttpMethod.DELETE, getRequestEntity(), Boolean.class);
+	}
+
+	public HttpEntity getRequestEntity() {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
+		return new HttpEntity<String>(headers);
+	}
+
+	public HttpEntity getRequestEntityWithBody(Category category) {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
+		return new HttpEntity(category, headers);
 	}
 }

@@ -66,12 +66,12 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         Product createdProduct = repo.save(product);
         if (createdProduct == null) {
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
+            return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
         }   
     }
 

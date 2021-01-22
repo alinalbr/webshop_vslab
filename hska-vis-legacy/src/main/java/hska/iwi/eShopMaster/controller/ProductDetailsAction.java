@@ -2,8 +2,8 @@ package hska.iwi.eShopMaster.controller;
 
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.model.Product;
+import hska.iwi.eShopMaster.model.User;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import com.opensymphony.xwork2.ActionSupport;
 public class ProductDetailsAction extends ActionSupport {
 	
 	private User user;
-	private int id;
+	private Long id;
 	private String searchValue;
 	private Integer searchMinPrice;
 	private Integer searchMaxPrice;
@@ -49,11 +49,11 @@ public class ProductDetailsAction extends ActionSupport {
 		this.user = user;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

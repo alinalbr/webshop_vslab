@@ -91,7 +91,6 @@ public class UserManagerImpl implements UserManager {
 
 	public HttpEntity getRequestEntity() {
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		System.out.println("session: " + session.get("webshop_jwt"));
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
 		return new HttpEntity<String>(headers);

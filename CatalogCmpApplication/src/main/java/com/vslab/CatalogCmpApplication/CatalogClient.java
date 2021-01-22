@@ -35,9 +35,9 @@ public class CatalogClient {
         return tmpproduct;
     }
 
-    public Void addProduct(Product product) {
+    public Product addProduct(Product product) {
         productCache.put(product.getId(), product);
-        return restTemplate.postForObject("http://productCoreService/product", product, Void.class);
+        return restTemplate.postForObject("http://productCoreService/product", product, Product.class);
     }
 
     @HystrixCommand(fallbackMethod = "getAllProductCache", commandProperties = {
@@ -91,6 +91,11 @@ public class CatalogClient {
     })
     public Category getCategory(Long categoryId) {
         Category cat = restTemplate.getForObject("http://categoryCoreService/category/" + categoryId, Category.class);
+        return cat;
+    }
+
+    public Category getCategoryByName(String categoryName) {
+        Category cat = restTemplate.getForObject("http://categoryCoreService/category/" + categoryName, Category.class);
         return cat;
     }
 

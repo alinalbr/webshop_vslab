@@ -1,66 +1,101 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
+import com.opensymphony.xwork2.ActionContext;
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.ProductDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
+import hska.iwi.eShopMaster.model.Product;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 public class ProductManagerImpl implements ProductManager {
-	private final ProductDAO helper;
-	
-	public ProductManagerImpl() {
-		helper = new ProductDAO();
-	}
+	private RestTemplate restTemplate = new RestTemplate();
+
+	public ProductManagerImpl() {}
 
 	public List<Product> getProducts() {
-		return helper.getObjectList();
+		ResponseEntity<Product[]> response = this.restTemplate.exchange("http://zuulserver:8085/product", HttpMethod.GET, getRequestEntity(), Product[].class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return Arrays.asList(response.getBody());
+		} else {
+			return null;
+		}
 	}
 	
 	public List<Product> getProductsForSearchValues(String searchDescription,
 													Double searchMinPrice, Double searchMaxPrice) {
-		return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
+		ResponseEntity<Product[]> response = this.restTemplate.exchange("http://zuulserver:8085/product" +
+						((searchDescription != null || searchMaxPrice != null || searchMinPrice != null) ? "?": "") +
+						(searchDescription != null ? ("searchValue=" + searchDescription + "&") : "") +
+						(searchMaxPrice != null ? ("maxPreis=" + searchMaxPrice + "&") : "") +
+						(searchMinPrice != null ? ("minPreis=" + searchMinPrice) : ""), HttpMethod.GET, getRequestEntity(), Product[].class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return Arrays.asList(response.getBody());
+		} else {
+			return null;
+		}
 	}
 
-	public Product getProductById(int id) {
-		return helper.getObjectById(id);
+	public Product getProductById(Long id) {
+		ResponseEntity<Product> response = this.restTemplate.exchange("http://zuulserver:8085/product/" + id, HttpMethod.GET, getRequestEntity(), Product.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return response.getBody();
+		} else {
+			return null;
+		}
 	}
 
-	public Product getProductByName(String name) {
-		return helper.getObjectByName(name);
+	public Product getProductByName(String name) { // this method is not needed
+		return new Product("Test", 10.0, 1L, "details");
 	}
 	
-	public int addProduct(String name, double price, int categoryId, String details) {
-		int productId = -1;
-		
-		CategoryManager categoryManager = new CategoryManagerImpl();
-		Category category = categoryManager.getCategory(categoryId);
-		
-		if(category != null){
-			Product product;
-			if(details == null){
-				product = new Product(name, price, category);	
-			} else{
-				product = new Product(name, price, category, details);
-			}
-			
-			helper.saveObject(product);
-			productId = product.getId();
+	public Long addProduct(String name, double price, Long categoryId, String details) {
+		Long productId = -1L;
+
+		Product product;
+		if(details == null){
+			product = new Product(name, price, categoryId, "");
+		} else{
+			product = new Product(name, price, categoryId, details);
 		}
-			 
+
+		ResponseEntity<Product> response = this.restTemplate.exchange("http://zuulserver:8085/product", HttpMethod.POST, getRequestEntityWithBody(product), Product.class);
+		if (response.getStatusCode() == HttpStatus.CREATED) {
+			Product createdProduct = response.getBody();
+			productId = createdProduct.getId();
+		}
+
 		return productId;
 	}
 	
 
-	public void deleteProductById(int id) {
-		helper.deleteById(id);
+	public boolean deleteProductById(Long id) {
+		ResponseEntity<Boolean> response = this.restTemplate.exchange("http://zuulserver:8085/product/" + id, HttpMethod.DELETE, getRequestEntity(), Boolean.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getBody()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean deleteProductsByCategoryId(int categoryId) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public HttpEntity getRequestEntity() {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
+		return new HttpEntity<String>(headers);
+	}
+
+	public HttpEntity getRequestEntityWithBody(Product product) {
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "bearer " + session.get("webshop_jwt"));
+		return new HttpEntity(product, headers);
 	}
 
 }

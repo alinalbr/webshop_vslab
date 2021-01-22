@@ -53,7 +53,7 @@ public class CatalogController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -61,8 +61,8 @@ public class CatalogController {
         try {
             Category category = catalogClient.getCategory(product.getCategoryId()); // check if given category exists
             if (!category.isEmptyObject()) {
-                catalogClient.addProduct(product);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                Product createdProduct = catalogClient.addProduct(product);
+                return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -109,6 +109,24 @@ public class CatalogController {
 
         try {
             Category category = catalogClient.getCategory(categoryId);
+            if (!category.isEmptyObject()) {
+                return new ResponseEntity<>(category, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            }
+        } catch (HttpStatusCodeException tp) {
+            return new ResponseEntity<Category>(tp.getStatusCode());
+        }
+    }
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<Category> getCategoryByName(@PathVariable String categoryName) {
+        if (categoryName == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Category category = catalogClient.getCategoryByName(categoryName);
             if (!category.isEmptyObject()) {
                 return new ResponseEntity<>(category, HttpStatus.OK);
             } else {

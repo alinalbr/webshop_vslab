@@ -4,8 +4,8 @@ import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.model.Category;
+import hska.iwi.eShopMaster.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class AddProductAction extends ActionSupport {
 
 	private String name = null;
 	private String price = null;
-	private int categoryId = 0;
+	private Long categoryId = 0L;
 	private String details = null;
 	private List<Category> categories;
 
@@ -28,13 +28,12 @@ public class AddProductAction extends ActionSupport {
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		User user = (User) session.get("webshop_user");
 
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		if(user != null && (user.getRole().equals(1L))) {
 
 			ProductManager productManager = new ProductManagerImpl();
-			int productId = productManager.addProduct(name, Double.parseDouble(price), categoryId,
-					details);
+			Long productId = productManager.addProduct(name, Double.parseDouble(price), categoryId, details);
 
-			if (productId > 0) {
+			if (productId > 0L) {
 				result = "success";
 			}
 		}
@@ -80,11 +79,11 @@ public class AddProductAction extends ActionSupport {
 		this.price = price;
 	}
 
-	public int getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 

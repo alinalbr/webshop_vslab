@@ -4,9 +4,9 @@ import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.model.Category;
+import hska.iwi.eShopMaster.model.Product;
+import hska.iwi.eShopMaster.model.User;
 
 import java.util.List;
 import java.util.Locale;
