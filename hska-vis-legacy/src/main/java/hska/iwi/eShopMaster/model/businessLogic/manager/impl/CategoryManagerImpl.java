@@ -35,7 +35,7 @@ public class CategoryManagerImpl implements CategoryManager {
 	}
 
 	public Category getCategoryByName(String name) {
-		ResponseEntity<Category> response = this.restTemplate.exchange("http://zuulserver:8085/category/" + name, HttpMethod.GET, getRequestEntity(), Category.class);
+		ResponseEntity<Category> response = this.restTemplate.exchange("http://zuulserver:8085/category/name/" + name, HttpMethod.GET, getRequestEntity(), Category.class);
 		if (response.getStatusCode() == HttpStatus.OK) {
 			return response.getBody();
 		} else {

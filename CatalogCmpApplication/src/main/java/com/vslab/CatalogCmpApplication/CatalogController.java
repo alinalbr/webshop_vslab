@@ -25,12 +25,16 @@ public class CatalogController {
 
         try {
             Product product = catalogClient.getProduct(productId);
+            System.out.println("1: " + product.getCategoryId());
             if (!product.isEmptyObject()) {
+                System.out.println("2: " + product.getCategoryId());
                 return new ResponseEntity<>(product, HttpStatus.OK);
             } else {
+                System.out.println("3: " + product.getCategoryId());
                 return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
             }
         } catch (HttpStatusCodeException tp) {
+            System.out.println("CATCH");
             return new ResponseEntity<>(new Product(), tp.getStatusCode());
         }
     }
@@ -62,6 +66,7 @@ public class CatalogController {
             Category category = catalogClient.getCategory(product.getCategoryId()); // check if given category exists
             if (!category.isEmptyObject()) {
                 Product createdProduct = catalogClient.addProduct(product);
+                createdProduct.setCategoryName(category.getName());
                 return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

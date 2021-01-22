@@ -3,10 +3,8 @@ package com.vslab.CatalogCmpApplication;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,7 +44,6 @@ public class CatalogClient {
     public Product[] getProducts(String searchValue, Double maxPreis, Double minPreis) {
         Product[] products;
         try {
-            // TODO: Ports raus nehmen
             ResponseEntity<Product[]> response = restTemplate.getForEntity("http://productCoreService/product" +
                             ((searchValue != null || maxPreis != null || minPreis != null) ? "?": "") +
                             (searchValue != null ? ("searchValue=" + searchValue + "&") : "") +
@@ -58,12 +55,16 @@ public class CatalogClient {
 
             for (Product product : products) {
                 Category category = getCategory(product.getCategoryId());
+                System.out.println("hallo " + product.getName());
                 if (!category.isEmptyObject()) {
+                    System.out.println("if");
                     product.setCategoryName(category.getName());
                 } else {
+                    System.out.println("else");
                     product.setCategoryName("unknown category");
                 }
             }
+            System.out.println("drunter");
 
             productCache.clear();
             for (Product product : products) {
@@ -95,7 +96,7 @@ public class CatalogClient {
     }
 
     public Category getCategoryByName(String categoryName) {
-        Category cat = restTemplate.getForObject("http://categoryCoreService/category/" + categoryName, Category.class);
+        Category cat = restTemplate.getForObject("http://categoryCoreService/category/name/" + categoryName, Category.class);
         return cat;
     }
 

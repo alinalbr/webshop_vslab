@@ -16,6 +16,7 @@ public class ProductManagerImpl implements ProductManager {
 	public List<Product> getProducts() {
 		ResponseEntity<Product[]> response = this.restTemplate.exchange("http://zuulserver:8085/product", HttpMethod.GET, getRequestEntity(), Product[].class);
 		if (response.getStatusCode() == HttpStatus.OK) {
+			System.out.println("getProducts " + response.getBody());
 			return Arrays.asList(response.getBody());
 		} else {
 			return null;
@@ -37,6 +38,7 @@ public class ProductManagerImpl implements ProductManager {
 	}
 
 	public Product getProductById(Long id) {
+		System.out.println("getProductById " + id);
 		ResponseEntity<Product> response = this.restTemplate.exchange("http://zuulserver:8085/product/" + id, HttpMethod.GET, getRequestEntity(), Product.class);
 		if (response.getStatusCode() == HttpStatus.OK) {
 			return response.getBody();
@@ -64,6 +66,8 @@ public class ProductManagerImpl implements ProductManager {
 			Product createdProduct = response.getBody();
 			productId = createdProduct.getId();
 		}
+
+		System.out.println("addProduct "+ productId);
 
 		return productId;
 	}

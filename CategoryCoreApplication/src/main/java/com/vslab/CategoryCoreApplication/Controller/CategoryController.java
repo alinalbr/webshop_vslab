@@ -35,7 +35,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/{categoryName}")
+    @GetMapping("/name/{categoryName}")
     public ResponseEntity<Optional<Category>> getCategoryName(@PathVariable String categoryName) {
         Optional<Category> category = repo.findByName(categoryName);
         if (!category.isPresent()) {
