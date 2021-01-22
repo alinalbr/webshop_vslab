@@ -35,6 +35,16 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/name/{categoryName}")
+    public ResponseEntity<Optional<Category>> getCategoryName(@PathVariable String categoryName) {
+        Optional<Category> category = repo.findByName(categoryName);
+        if (!category.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<Optional<Category>>(category, HttpStatus.OK);
+        }
+    }
+
     @PostMapping("")
     public ResponseEntity<Void> addCategory(@RequestBody Category category) {
         Category createdCategory = repo.save(category);

@@ -6,16 +6,16 @@ spring:
   cloud:
     config:
       enable: false
+
 eureka:
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-    statusPageUrlPath: /info
-    healthCheckUrlPath: /health
   client:
-    register-with-eureka: true
-    fetch-registry: true
     serviceUrl:
       defaultZone: http://eurekaserver:8761/eureka/
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 5
+    metadataMap:
+      instanceId: "${spring.application.name}:${random.value}"
 zuul:
   host:
     socket-timeout-millis: 20000
@@ -33,3 +33,14 @@ zuul:
       path: /product/**
       serviceId: catalogCompositeService
       stripPrefix: false
+    auth:
+      sensitive-headers:
+        - Authorization,Cookie,Set-Cookie
+      path: /auth/**
+      stripPrefix: false
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+      jwk:
+        key-set-uri: http://auth:8086/auth/oauth2/keys

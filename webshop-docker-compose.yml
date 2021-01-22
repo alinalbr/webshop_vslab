@@ -1,13 +1,6 @@
 version: '3'
 
 services:
-  eurekaserver:
-    build: eurekaServer
-    container_name: eurekaserver
-    ports:
-      - 8761:8761
-    volumes:
-      - ./eurekaServer:/EurekaServerApplication
   products_core_database:
     image: mysql
     container_name: products_core_database
@@ -30,7 +23,6 @@ services:
       - ./ProductCoreApplication:/ProductCoreApplication
     depends_on:
       - products_core_database
-      - eurekaserver
   user_core_database:
     image: mysql
     container_name: user_core_database
@@ -53,7 +45,6 @@ services:
       - 8081:8081
     depends_on:
       - user_core_database
-      - eurekaserver
   category_core_database:
     image: mysql
     container_name: category_core_database
@@ -74,7 +65,6 @@ services:
       - 8082:8082
     depends_on:
       - category_core_database
-      - eurekaserver
   user_composite_backend:
     build: UserCmpApplication
     container_name: user_composite_backend
@@ -83,7 +73,6 @@ services:
     depends_on:
       - user_core_database
       - user_core_backend
-      - eurekaserver
   catalog_composite_backend:
     build: CatalogCmpApplication
     container_name: catalog_composite_backend
@@ -94,16 +83,6 @@ services:
       - products_core_backend
       - category_core_database
       - category_core_backend
-      - eurekaserver
-  zuulserver:
-    build: zuul
-    container_name: zuulserver
-    ports:
-      - 8085:8085
-    depends_on:
-      - eurekaserver
-      - user_composite_backend
-      - catalog_composite_backend
 volumes:
   products_database_data:
   user_core_database_data:

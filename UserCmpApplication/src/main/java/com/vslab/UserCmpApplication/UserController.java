@@ -30,8 +30,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<User> getUser(@PathVariable String username) {
+        if (username == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            User user = userClient.getUser(username);
+            if (!user.isEmptyObject()) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+            }
+        } catch (HttpStatusCodeException tp) {
+            return new ResponseEntity<>(new User(), tp.getStatusCode());
+        }
+    }
+
     //Get user
-    @GetMapping("/{userId}")
+    /*@GetMapping("/{userId}")
     public ResponseEntity<User> getUser(@PathVariable Long userId) {
         if (userId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,7 +66,7 @@ public class UserController {
             return new ResponseEntity<>(new User(), tp.getStatusCode());
         }
 
-    }
+    }*/
 
     //Login user
     @PostMapping("/login")
