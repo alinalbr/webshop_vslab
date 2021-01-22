@@ -55,16 +55,12 @@ public class CatalogClient {
 
             for (Product product : products) {
                 Category category = getCategory(product.getCategoryId());
-                System.out.println("hallo " + product.getName());
                 if (!category.isEmptyObject()) {
-                    System.out.println("if");
                     product.setCategoryName(category.getName());
                 } else {
-                    System.out.println("else");
                     product.setCategoryName("unknown category");
                 }
             }
-            System.out.println("drunter");
 
             productCache.clear();
             for (Product product : products) {

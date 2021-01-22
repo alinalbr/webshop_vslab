@@ -16,7 +16,6 @@ public class ProductManagerImpl implements ProductManager {
 	public List<Product> getProducts() {
 		ResponseEntity<Product[]> response = this.restTemplate.exchange("http://zuulserver:8085/product", HttpMethod.GET, getRequestEntity(), Product[].class);
 		if (response.getStatusCode() == HttpStatus.OK) {
-			System.out.println("getProducts " + response.getBody());
 			return Arrays.asList(response.getBody());
 		} else {
 			return null;
@@ -26,8 +25,8 @@ public class ProductManagerImpl implements ProductManager {
 	public List<Product> getProductsForSearchValues(String searchDescription,
 													Double searchMinPrice, Double searchMaxPrice) {
 		ResponseEntity<Product[]> response = this.restTemplate.exchange("http://zuulserver:8085/product" +
-						((searchDescription != null || searchMaxPrice != null || searchMinPrice != null) ? "?": "") +
-						(searchDescription != null ? ("searchValue=" + searchDescription + "&") : "") +
+						((!searchDescription.equals("") || searchMaxPrice != null || searchMinPrice != null) ? "?": "") +
+						(!searchDescription.equals("") ? ("searchValue=" + searchDescription + "&") : "") +
 						(searchMaxPrice != null ? ("maxPreis=" + searchMaxPrice + "&") : "") +
 						(searchMinPrice != null ? ("minPreis=" + searchMinPrice) : ""), HttpMethod.GET, getRequestEntity(), Product[].class);
 		if (response.getStatusCode() == HttpStatus.OK) {
@@ -38,7 +37,6 @@ public class ProductManagerImpl implements ProductManager {
 	}
 
 	public Product getProductById(Long id) {
-		System.out.println("getProductById " + id);
 		ResponseEntity<Product> response = this.restTemplate.exchange("http://zuulserver:8085/product/" + id, HttpMethod.GET, getRequestEntity(), Product.class);
 		if (response.getStatusCode() == HttpStatus.OK) {
 			return response.getBody();
@@ -66,8 +64,6 @@ public class ProductManagerImpl implements ProductManager {
 			Product createdProduct = response.getBody();
 			productId = createdProduct.getId();
 		}
-
-		System.out.println("addProduct "+ productId);
 
 		return productId;
 	}

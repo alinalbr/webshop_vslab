@@ -34,8 +34,8 @@ zuul:
       serviceId: catalogCompositeService
       stripPrefix: false
     auth:
-      sensitiveHeaders:
-        serviceId: eureka
+      sensitive-headers:
+        - Authorization,Cookie,Set-Cookie
       path: /auth/**
       stripPrefix: false
 security:

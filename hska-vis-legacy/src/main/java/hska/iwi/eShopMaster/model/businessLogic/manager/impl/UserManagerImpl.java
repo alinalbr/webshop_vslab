@@ -32,7 +32,7 @@ public class UserManagerImpl implements UserManager {
 		ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
 		resourceDetails.setUsername(username);
 		resourceDetails.setPassword(password);
-		resourceDetails.setAccessTokenUri("http://auth:8086/auth/oauth/token");
+		resourceDetails.setAccessTokenUri("http://zuulserver:8085/auth/oauth/token");
 		resourceDetails.setClientId("webshop-client");
 		resourceDetails.setClientSecret("secretPassword");
 		resourceDetails.setGrantType("password");
